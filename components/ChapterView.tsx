@@ -9,15 +9,10 @@ export interface IBookSelection extends Range {
 	id: string
 }
 
-const ChapterView = ({
-	chapter,
-	chapterIndex,
-}: {
-	chapter: IParsedChapter
-	chapterIndex: number
-}) => {
-	const { annotationsAreVisible, highlightColor } = useContext(BookViewerContext)
+const ChapterView = () => {
+	const { annotationsAreVisible, highlightColor, chapters, chapter } = useContext(BookViewerContext)
 	const [ranges, setRanges] = useState<Range[]>([])
+	const chapterText = chapters[chapter]?.text
 
 	useEffect(() => {
 		ranges.map(range => {
@@ -43,11 +38,11 @@ const ChapterView = ({
 		})
 	}, [ranges, annotationsAreVisible, highlightColor])
 
-	const passages = chapter?.text?.split('\n\n')
+	const passages = chapterText?.split('\n\n')
 
 	const handleSelection = () => {
 		const selObj = window.getSelection() || new Selection()
-		const rangeObj = selObj.getRangeAt(0) as IBookSelection
+		const rangeObj = selObj?.getRangeAt(0) as IBookSelection
 
 		if (
 			rangeObj &&
@@ -61,10 +56,10 @@ const ChapterView = ({
 		}
 	}
 
-	if (chapter?.text?.startsWith('<?xml'))
+	if (chapterText?.startsWith('<?xml'))
 		return (
 			<Box
-				id={`chapter-${chapterIndex}-container`}
+				id={`chapter-${chapter}-container`}
 				height="100%"
 				width="100%"
 				position="relative"
@@ -79,9 +74,9 @@ const ChapterView = ({
 					scrollbarWidth: 'none',
 				}}
 				dangerouslySetInnerHTML={{
-					__html: chapter.text.slice(
-						chapter.text.indexOf('<body'),
-						chapter.text.indexOf('</body>') + 7,
+					__html: chapterText.slice(
+						chapterText.indexOf('<body'),
+						chapterText.indexOf('</body>') + 7,
 					),
 				}}
 			/>
@@ -89,7 +84,7 @@ const ChapterView = ({
 
 	return (
 		<Box
-			id={`chapter-${chapterIndex}-container`}
+			id={`chapter-${chapter}-container`}
 			height="100%"
 			width="100%"
 			position="relative"
@@ -105,11 +100,11 @@ const ChapterView = ({
 		>
 			{passages?.map((passage, passageIndex) => (
 				<Passage
-					chapterImages={chapter.images}
+					chapterImages={chapters[chapter]?.images}
 					key={`passage-${passageIndex}-container`}
 					passage={passage}
 					passageIndex={passageIndex}
-					chapterIndex={chapterIndex}
+					chapterIndex={chapter}
 				/>
 			))}
 		</Box>

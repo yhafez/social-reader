@@ -1,14 +1,19 @@
-import { useState, useContext, useRef } from 'react'
+import { useState, useContext, useRef, Dispatch, SetStateAction } from 'react'
 import GraphicEqIcon from '@mui/icons-material/GraphicEq'
-import { Box, IconButton, Slider, Tooltip } from '@mui/material'
+import { Box, ClickAwayListener, IconButton, Slider, Tooltip } from '@mui/material'
 
-import { BookViewerContext } from '../../context/BookViewerContext'
 import { ThemeContext } from '../../context/ThemeContext'
+import { BookViewerContext } from '../../context/BookViewerContext'
 
-const AdjustPitch = () => {
+const AdjustPitch = ({
+	pitch,
+	setPitch,
+}: {
+	pitch: number
+	setPitch: Dispatch<SetStateAction<number>>
+}) => {
 	const { isDarkMode } = useContext(ThemeContext)
-	const { pitch, setPitch } = useContext(BookViewerContext)
-	const [isOpen, setIsOpen] = useState(true)
+	const [isOpen, setIsOpen] = useState(false)
 	const buttonRef = useRef<HTMLButtonElement>(null)
 
 	return (
@@ -24,29 +29,35 @@ const AdjustPitch = () => {
 				</IconButton>
 			</Tooltip>
 			{isOpen && (
-				<Box
-					position="absolute"
-					right={buttonRef.current?.offsetLeft}
-					bottom={50}
-					py={2}
-					borderRadius={2}
-					sx={{
-						backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-					}}
-					height="7rem"
-				>
-					<Slider
-						orientation="vertical"
-						aria-label="Rate slider"
-						value={pitch}
-						getAriaValueText={value => `${value}x`}
-						step={0.25}
-						onChange={(event, value) => setPitch(value as number)}
-						valueLabelDisplay="auto"
-						max={3}
-						min={0.25}
-					/>
-				</Box>
+				<ClickAwayListener onClickAway={() => setIsOpen(false)}>
+					<Box
+						position="absolute"
+						left={buttonRef.current?.offsetLeft}
+						bottom={50}
+						py={2}
+						borderRadius={2}
+						sx={{
+							backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+						}}
+						height="7rem"
+					>
+						<Slider
+							orientation="vertical"
+							aria-label="Rate slider"
+							value={pitch}
+							getAriaValueText={value => `${value}x`}
+							step={0.25}
+							onChange={(e, value) => {
+								e.stopPropagation()
+								e.preventDefault()
+								setPitch(value as number)
+							}}
+							valueLabelDisplay="auto"
+							max={2}
+							min={0.25}
+						/>
+					</Box>
+				</ClickAwayListener>
 			)}
 		</>
 	)

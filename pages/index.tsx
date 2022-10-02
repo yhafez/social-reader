@@ -7,6 +7,7 @@ import BookActionBar from '../components/BookActionBar'
 import axios from 'axios'
 import { ThemeContext } from '../context/ThemeContext'
 import { IParsedChapter } from './api/epub'
+import { BookViewerContext } from '../context/BookViewerContext'
 
 export interface IChapters {
 	chapters: IParsedChapter[]
@@ -14,14 +15,16 @@ export interface IChapters {
 
 const Home = ({ chapters }: IChapters) => {
 	const { isDarkMode, setColorMode } = useContext(ThemeContext)
+	const { setChapters } = useContext(BookViewerContext)
 
 	useEffect(() => {
+		if (chapters) setChapters(chapters)
 		if (localStorage.getItem('colorMode') === 'dark') {
 			setColorMode('dark')
 		} else if (localStorage.getItem('colorMode') === 'light') {
 			setColorMode('light')
 		}
-	}, [setColorMode])
+	}, [setColorMode, setChapters, chapters])
 
 	return (
 		<Box
@@ -38,7 +41,7 @@ const Home = ({ chapters }: IChapters) => {
 			sx={{ backgroundColor: isDarkMode ? '#242424' : 'white' }}
 		>
 			<Navbar />
-			<BookViewer chapters={chapters} />
+			<BookViewer />
 			<BookActionBar />
 		</Box>
 	)

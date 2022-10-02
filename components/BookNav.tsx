@@ -6,22 +6,21 @@ import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 import { ThemeContext } from '../context/ThemeContext'
+import { BookViewerContext } from '../context/BookViewerContext'
 
 export interface IBookNav {
-	setCurrentChapter: Dispatch<SetStateAction<number>>
 	side: 'left' | 'right'
-	currentChapter: number
 	epubLength: number
 }
 
-const BookNav = ({ setCurrentChapter, side, currentChapter, epubLength }: IBookNav) => {
+const BookNav = ({ side, epubLength }: IBookNav) => {
 	const theme = useTheme()
 	const matches = useMediaQuery(theme.breakpoints.down('sm'))
 	const { isDarkMode } = useContext(ThemeContext)
+	const { chapter, setChapter } = useContext(BookViewerContext)
 
 	const boxStyles =
-		(side === 'left' && currentChapter !== 0) ||
-		(side === 'right' && currentChapter !== epubLength - 1)
+		(side === 'left' && chapter !== 0) || (side === 'right' && chapter !== epubLength - 1)
 			? {
 					cursor: 'pointer',
 					width: matches ? '100%' : 'auto',
@@ -44,7 +43,7 @@ const BookNav = ({ setCurrentChapter, side, currentChapter, epubLength }: IBookN
 			px={matches ? 0 : 1}
 			sx={boxStyles}
 			onClick={() =>
-				setCurrentChapter(chapter => {
+				setChapter(chapter => {
 					if (side === 'left') {
 						if (chapter !== 0) {
 							localStorage.setItem('currentChapter', JSON.stringify(chapter - 1))

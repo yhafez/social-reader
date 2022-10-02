@@ -12,7 +12,7 @@ const TextToSpeechToggle = () => {
 			<Tooltip id="text-to-speech-button-tooltip" title="Text-to-Speech">
 				<IconButton
 					id="text-to-speech-button"
-					onClick={() => setIsOpen(true)}
+					onClick={() => setIsOpen(open => !open)}
 					color={isOpen ? 'primary' : 'inherit'}
 				>
 					<CampaignIcon id="voices-icon" sx={{ cursor: 'pointer' }} />

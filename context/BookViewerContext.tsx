@@ -1,4 +1,5 @@
 import { createContext, useState, Dispatch, SetStateAction, ReactNode } from 'react'
+import { IParsedChapter } from '../pages/api/epub'
 
 export interface IBookViewerState {
 	annotationsAreVisible: boolean
@@ -11,18 +12,12 @@ export interface IBookViewerState {
 	setHighlightColor: Dispatch<SetStateAction<string>>
 	highlightHoverColor: string
 	setHighlightHoverColor: Dispatch<SetStateAction<string>>
-	voices: SpeechSynthesisVoice[]
-	setVoices: Dispatch<SetStateAction<SpeechSynthesisVoice[]>>
-	voice: SpeechSynthesisVoice | null
-	setVoice: Dispatch<SetStateAction<SpeechSynthesisVoice | null>>
 	imagesAreVisible: boolean
 	setImagesAreVisible: Dispatch<SetStateAction<boolean>>
-	volume: number
-	setVolume: Dispatch<SetStateAction<number>>
-	pitch: number
-	setPitch: Dispatch<SetStateAction<number>>
-	rate: number
-	setRate: Dispatch<SetStateAction<number>>
+	chapters: IParsedChapter[]
+	setChapters: Dispatch<SetStateAction<IParsedChapter[]>>
+	chapter: number
+	setChapter: Dispatch<SetStateAction<number>>
 }
 
 export const BookViewerContext = createContext<IBookViewerState>({
@@ -36,18 +31,12 @@ export const BookViewerContext = createContext<IBookViewerState>({
 	setHighlightColor: () => null,
 	highlightHoverColor: '#e8cb6b',
 	setHighlightHoverColor: () => null,
-	voices: [],
-	setVoices: () => null,
-	voice: null,
-	setVoice: () => null,
 	imagesAreVisible: true,
 	setImagesAreVisible: () => null,
-	volume: 1,
-	setVolume: () => null,
-	pitch: 1,
-	setPitch: () => null,
-	rate: 1,
-	setRate: () => null,
+	chapters: [],
+	setChapters: () => null,
+	chapter: 0,
+	setChapter: () => null,
 })
 
 const BookViewerProvider = ({ children }: { children: ReactNode }) => {
@@ -56,12 +45,9 @@ const BookViewerProvider = ({ children }: { children: ReactNode }) => {
 	const [fontSize, setFontSize] = useState(1)
 	const [highlightColor, setHighlightColor] = useState('#f0ba00')
 	const [highlightHoverColor, setHighlightHoverColor] = useState('#e8cb6b')
-	const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
-	const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null)
 	const [imagesAreVisible, setImagesAreVisible] = useState(true)
-	const [volume, setVolume] = useState(1)
-	const [pitch, setPitch] = useState(1)
-	const [rate, setRate] = useState(1)
+	const [chapters, setChapters] = useState<IParsedChapter[]>([])
+	const [chapter, setChapter] = useState(0)
 
 	return (
 		<BookViewerContext.Provider
@@ -76,18 +62,12 @@ const BookViewerProvider = ({ children }: { children: ReactNode }) => {
 				setHighlightColor,
 				highlightHoverColor,
 				setHighlightHoverColor,
-				voices,
-				setVoices,
-				voice,
-				setVoice,
 				imagesAreVisible,
 				setImagesAreVisible,
-				volume,
-				setVolume,
-				pitch,
-				setPitch,
-				rate,
-				setRate,
+				chapters,
+				setChapters,
+				chapter,
+				setChapter,
 			}}
 		>
 			{children}

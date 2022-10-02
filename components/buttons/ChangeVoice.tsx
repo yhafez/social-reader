@@ -1,11 +1,14 @@
-import { useContext, useState } from 'react'
+import { useState, Dispatch, SetStateAction } from 'react'
 import { IconButton, Menu, MenuItem, Tooltip } from '@mui/material'
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver'
 
-import { BookViewerContext } from '../../context/BookViewerContext'
-
-const ChangeVoice = () => {
-	const { voices, setVoice } = useContext(BookViewerContext)
+const ChangeVoice = ({
+	voices,
+	setVoice,
+}: {
+	voices: SpeechSynthesisVoice[]
+	setVoice: Dispatch<SetStateAction<SpeechSynthesisVoice | null>>
+}) => {
 	const [displayVoices, setDisplayVoices] = useState(false)
 	const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
 
