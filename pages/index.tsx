@@ -6,8 +6,10 @@ import Navbar from '../components/Navbar'
 import BookActionBar from '../components/BookActionBar'
 import axios from 'axios'
 import { ThemeContext } from '../context/ThemeContext'
+import { IParsedChapter } from './api/epub'
+
 export interface IChapters {
-	chapters: string[]
+	chapters: IParsedChapter[]
 }
 
 const Home = ({ chapters }: IChapters) => {

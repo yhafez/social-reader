@@ -7,6 +7,7 @@ import HighlightColorPicker from './buttons/HighlightColorPicker'
 import ChangeVoice from './buttons/ChangeVoice'
 import ColorModeSwitch from './buttons/ColorModeSwitch'
 import ThemeColorPicker from './buttons/ThemeColorPicker'
+import ToggleImages from './buttons/ToggleImages'
 
 import { ThemeContext } from '../context/ThemeContext'
 import TextToSpeechToggle from './buttons/TextToSpeechToggle'
@@ -47,6 +48,7 @@ const BookActionBar = () => {
 					<ChangeFont increase />
 					<ChangeFont />
 					<ToggleAnnotations />
+					<ToggleImages />
 					<HighlightColorPicker />
 					<ThemeColorPicker />
 				</Box>

@@ -4,6 +4,18 @@ import EPub from 'epub2'
 import path from 'path'
 import fs from 'fs'
 import { htmlToText } from 'html-to-text'
+import { v4 as generateUuid } from 'uuid'
+
+export interface IChapterImage {
+	uuid: string
+	src: string
+	alt: string
+}
+
+export interface IParsedChapter {
+	text: string
+	images: IChapterImage[]
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	if (req.method === 'GET') {
@@ -13,18 +25,39 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			)
 			const chapterKeys: string[] = epub.flow.map(chapter => (chapter.id ? chapter.id : ''))
 
-			const chapters: string[] = []
+			const chapters: IParsedChapter[] = []
 
 			for (const chapterKey of chapterKeys) {
-				const chapter = await epub.getChapterRawAsync(chapterKey)
-				if (chapterKey.includes('title')) chapters.push(chapter)
+				let chapter = await epub.getChapterRawAsync(chapterKey)
+
+				const chapterImages: IChapterImage[] = []
+				const matchesImg = chapter.match(/<img([\w\W]+?)\/>/g) || []
+
+				matchesImg?.map(imgMatch => {
+					const uuid = generateUuid()
+					const matchesSrc = imgMatch.match(/src="([^"]+)"/) || []
+					const matchesAlt = imgMatch.match(/alt="([^"]+)"/) || []
+
+					if (matchesSrc[1] && matchesAlt[1]) {
+						chapterImages.push({ uuid, src: '/' + matchesSrc[1], alt: matchesAlt[1] })
+
+						chapter = chapter.replace(imgMatch, `@${uuid}@`)
+					}
+				})
+
+				if (chapterKey.includes('title'))
+					chapters.push({
+						text: chapter,
+						images: chapterImages,
+					})
 				else
-					chapters.push(
-						htmlToText(chapter, {
+					chapters.push({
+						text: htmlToText(chapter, {
 							preserveNewlines: true,
 							selectors: [{ selector: 'img', format: 'skip' }],
 						}),
-					)
+						images: chapterImages,
+					})
 			}
 
 			const fileKeys = Object.keys(epub.manifest)

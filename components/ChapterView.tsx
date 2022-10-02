@@ -4,11 +4,18 @@ import { Box } from '@mui/material'
 import Passage from './Passage'
 import { highlightText } from '../utils/helpers'
 import { BookViewerContext } from '../context/BookViewerContext'
+import { IParsedChapter } from '../pages/api/epub'
 export interface IBookSelection extends Range {
 	id: string
 }
 
-const ChapterView = ({ chapter, chapterIndex }: { chapter: string; chapterIndex: number }) => {
+const ChapterView = ({
+	chapter,
+	chapterIndex,
+}: {
+	chapter: IParsedChapter
+	chapterIndex: number
+}) => {
 	const { annotationsAreVisible, highlightColor } = useContext(BookViewerContext)
 	const [ranges, setRanges] = useState<Range[]>([])
 
@@ -36,7 +43,7 @@ const ChapterView = ({ chapter, chapterIndex }: { chapter: string; chapterIndex:
 		})
 	}, [ranges, annotationsAreVisible, highlightColor])
 
-	const passages = chapter.split('\n\n')
+	const passages = chapter?.text?.split('\n\n')
 
 	const handleSelection = () => {
 		const selObj = window.getSelection() || new Selection()
@@ -54,7 +61,7 @@ const ChapterView = ({ chapter, chapterIndex }: { chapter: string; chapterIndex:
 		}
 	}
 
-	if (chapter.startsWith('<?xml'))
+	if (chapter?.text?.startsWith('<?xml'))
 		return (
 			<Box
 				id={`chapter-${chapterIndex}-container`}
@@ -72,7 +79,10 @@ const ChapterView = ({ chapter, chapterIndex }: { chapter: string; chapterIndex:
 					scrollbarWidth: 'none',
 				}}
 				dangerouslySetInnerHTML={{
-					__html: chapter.slice(chapter.indexOf('<body'), chapter.indexOf('</body>') + 7),
+					__html: chapter.text.slice(
+						chapter.text.indexOf('<body'),
+						chapter.text.indexOf('</body>') + 7,
+					),
 				}}
 			/>
 		)
@@ -93,8 +103,9 @@ const ChapterView = ({ chapter, chapterIndex }: { chapter: string; chapterIndex:
 				scrollbarWidth: 'none',
 			}}
 		>
-			{passages.map((passage, passageIndex) => (
+			{passages?.map((passage, passageIndex) => (
 				<Passage
+					chapterImages={chapter.images}
 					key={`passage-${passageIndex}-container`}
 					passage={passage}
 					passageIndex={passageIndex}
