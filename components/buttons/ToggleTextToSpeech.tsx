@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { IconButton, Tooltip } from '@mui/material'
 import CampaignIcon from '@mui/icons-material/Campaign'
 
+import TTSController from '../TTSController'
+
 const TextToSpeechToggle = () => {
 	const [isOpen, setIsOpen] = useState(false)
 
@@ -16,6 +18,7 @@ const TextToSpeechToggle = () => {
 					<CampaignIcon id="voices-icon" sx={{ cursor: 'pointer' }} />
 				</IconButton>
 			</Tooltip>
+			{isOpen && <TTSController setIsOpen={setIsOpen} />}
 		</>
 	)
 }

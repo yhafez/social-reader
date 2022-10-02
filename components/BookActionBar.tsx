@@ -4,13 +4,12 @@ import { Box } from '@mui/material'
 import ChangeFont from './buttons/ChangeFont'
 import ToggleAnnotations from './buttons/ToggleAnnotations'
 import HighlightColorPicker from './buttons/HighlightColorPicker'
-import ChangeVoice from './buttons/ChangeVoice'
 import ColorModeSwitch from './buttons/ColorModeSwitch'
 import ThemeColorPicker from './buttons/ThemeColorPicker'
 import ToggleImages from './buttons/ToggleImages'
 
 import { ThemeContext } from '../context/ThemeContext'
-import TextToSpeechToggle from './buttons/TextToSpeechToggle'
+import ToggleTextToSpeech from './buttons/ToggleTextToSpeech'
 
 const BookActionBar = () => {
 	const { themeColor } = useContext(ThemeContext)
@@ -43,8 +42,7 @@ const BookActionBar = () => {
 					width="100%"
 					mr={1}
 				>
-					<TextToSpeechToggle />
-					<ChangeVoice />
+					<ToggleTextToSpeech />
 					<ChangeFont increase />
 					<ChangeFont />
 					<ToggleAnnotations />

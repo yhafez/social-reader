@@ -42,6 +42,13 @@ const ChangeVoice = () => {
 					MenuListProps={{
 						'aria-labelledby': 'voices-button',
 					}}
+					PaperProps={{
+						style: {
+							maxHeight: 400,
+						},
+					}}
+					anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+					transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
 				>
 					{voices.map(voice => (
 						<MenuItem onClick={e => handleClose(e, voice)} key={voice.name}>
