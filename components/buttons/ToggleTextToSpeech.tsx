@@ -5,7 +5,7 @@ import CampaignIcon from '@mui/icons-material/Campaign'
 import TTSController from '../TTSController'
 
 const TextToSpeechToggle = () => {
-	const [isOpen, setIsOpen] = useState(false)
+	const [isOpen, setIsOpen] = useState(true)
 
 	return (
 		<>

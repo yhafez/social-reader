@@ -17,6 +17,12 @@ export interface IBookViewerState {
 	setVoice: Dispatch<SetStateAction<SpeechSynthesisVoice | null>>
 	imagesAreVisible: boolean
 	setImagesAreVisible: Dispatch<SetStateAction<boolean>>
+	volume: number
+	setVolume: Dispatch<SetStateAction<number>>
+	pitch: number
+	setPitch: Dispatch<SetStateAction<number>>
+	rate: number
+	setRate: Dispatch<SetStateAction<number>>
 }
 
 export const BookViewerContext = createContext<IBookViewerState>({
@@ -36,6 +42,12 @@ export const BookViewerContext = createContext<IBookViewerState>({
 	setVoice: () => null,
 	imagesAreVisible: true,
 	setImagesAreVisible: () => null,
+	volume: 1,
+	setVolume: () => null,
+	pitch: 1,
+	setPitch: () => null,
+	rate: 1,
+	setRate: () => null,
 })
 
 const BookViewerProvider = ({ children }: { children: ReactNode }) => {
@@ -47,6 +59,9 @@ const BookViewerProvider = ({ children }: { children: ReactNode }) => {
 	const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
 	const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null)
 	const [imagesAreVisible, setImagesAreVisible] = useState(true)
+	const [volume, setVolume] = useState(1)
+	const [pitch, setPitch] = useState(1)
+	const [rate, setRate] = useState(1)
 
 	return (
 		<BookViewerContext.Provider
@@ -67,6 +82,12 @@ const BookViewerProvider = ({ children }: { children: ReactNode }) => {
 				setVoice,
 				imagesAreVisible,
 				setImagesAreVisible,
+				volume,
+				setVolume,
+				pitch,
+				setPitch,
+				rate,
+				setRate,
 			}}
 		>
 			{children}

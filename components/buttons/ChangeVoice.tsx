@@ -47,8 +47,8 @@ const ChangeVoice = () => {
 							maxHeight: 400,
 						},
 					}}
-					anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-					transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+					anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+					transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
 				>
 					{voices.map(voice => (
 						<MenuItem onClick={e => handleClose(e, voice)} key={voice.name}>

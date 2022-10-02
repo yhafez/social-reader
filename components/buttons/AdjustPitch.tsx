@@ -1,31 +1,26 @@
 import { useState, useContext, useRef } from 'react'
-import VolumeUpIcon from '@mui/icons-material/VolumeUp'
-import VolumeOffIcon from '@mui/icons-material/VolumeOff'
+import GraphicEqIcon from '@mui/icons-material/GraphicEq'
 import { Box, IconButton, Slider, Tooltip } from '@mui/material'
 
 import { BookViewerContext } from '../../context/BookViewerContext'
 import { ThemeContext } from '../../context/ThemeContext'
 
-const AdjustVolume = () => {
+const AdjustPitch = () => {
 	const { isDarkMode } = useContext(ThemeContext)
-	const { volume, setVolume } = useContext(BookViewerContext)
+	const { pitch, setPitch } = useContext(BookViewerContext)
 	const [isOpen, setIsOpen] = useState(true)
 	const buttonRef = useRef<HTMLButtonElement>(null)
 
 	return (
 		<>
-			<Tooltip id="adjust-volume-button-tooltip" title="Adjust audio volume">
+			<Tooltip id="adjust-pitch-button-tooltip" title="Adjust audio pitch">
 				<IconButton
-					id="adjust-volume-button"
+					id="adjust-pitch-button"
 					onClick={() => setIsOpen(true)}
 					color={isOpen ? 'primary' : 'inherit'}
 					ref={buttonRef}
 				>
-					{volume > 0 ? (
-						<VolumeUpIcon id="adjust-volume-icon" sx={{ cursor: 'pointer' }} />
-					) : (
-						<VolumeOffIcon id="adjust-volume-icon" sx={{ cursor: 'pointer' }} />
-					)}
+					<GraphicEqIcon id="adjust-pitch-icon" sx={{ cursor: 'pointer' }} />
 				</IconButton>
 			</Tooltip>
 			{isOpen && (
@@ -43,12 +38,13 @@ const AdjustVolume = () => {
 					<Slider
 						orientation="vertical"
 						aria-label="Rate slider"
-						value={volume}
+						value={pitch}
 						getAriaValueText={value => `${value}x`}
-						onChange={(event, value) => setVolume(value as number)}
+						step={0.25}
+						onChange={(event, value) => setPitch(value as number)}
 						valueLabelDisplay="auto"
-						max={100}
-						min={0}
+						max={3}
+						min={0.25}
 					/>
 				</Box>
 			)}
@@ -56,4 +52,4 @@ const AdjustVolume = () => {
 	)
 }
 
-export default AdjustVolume
+export default AdjustPitch

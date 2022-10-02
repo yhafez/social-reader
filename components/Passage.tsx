@@ -1,6 +1,6 @@
+import { useContext, Fragment } from 'react'
 import { Box } from '@mui/material'
 import Image from 'next/future/image'
-import { useContext, Fragment } from 'react'
 import { BookViewerContext } from '../context/BookViewerContext'
 import { IChapterImage } from '../pages/api/epub'
 
@@ -50,16 +50,12 @@ const Passage = ({
 		<Fragment>
 			{passage.split(/\s+/g).map((word, wordIndex) =>
 				word.startsWith('@') && word.endsWith('@') ? (
-					<>
+					<Fragment
+						key={`chapter-${chapterIndex}-passage-${passageIndex}-image-${wordIndex}-container`}
+					>
 						{imagesAreVisible && (
 							<>
-								<Box
-									display="flex"
-									justifyContent="center"
-									alignItems="center"
-									width="100%"
-									key={`chapter-${chapterIndex}-passage-${passageIndex}-image-${wordIndex}-container`}
-								>
+								<Box display="flex" justifyContent="center" alignItems="center" width="100%">
 									<Image
 										id={`chapter-${chapterIndex}-passage-${passageIndex}-image-${wordIndex}`}
 										src={
@@ -83,7 +79,7 @@ const Passage = ({
 								<br id={`image-line-break-${wordIndex}`} />
 							</>
 						)}
-					</>
+					</Fragment>
 				) : (
 					<span
 						id={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}`}

@@ -3,6 +3,9 @@ import { Box } from '@mui/material'
 
 import Close from './buttons/Close'
 import ChangeVoice from './buttons/ChangeVoice'
+import AdjustPitch from './buttons/AdjustPitch'
+import AdjustVolume from './buttons/AdjustVolume'
+import AdjustRate from './buttons/AdjustRate'
 import { ThemeContext } from '../context/ThemeContext'
 
 const TTSController = ({ setIsOpen }: { setIsOpen: Dispatch<SetStateAction<boolean>> }) => {
@@ -20,6 +23,9 @@ const TTSController = ({ setIsOpen }: { setIsOpen: Dispatch<SetStateAction<boole
 			}}
 		>
 			<ChangeVoice />
+			<AdjustPitch />
+			<AdjustVolume />
+			<AdjustRate />
 			<Close name="tts-controller" setIsOpen={setIsOpen} />
 		</Box>
 	)
