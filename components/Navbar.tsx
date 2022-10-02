@@ -1,15 +1,13 @@
-import { useEffect, useContext } from 'react'
+import { useContext } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Box, IconButton, Typography, Tooltip } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 
-import TextToSpeechToggle from './buttons/TextToSpeechToggle'
 import { ThemeContext } from '../context/ThemeContext'
 import { BookViewerContext } from '../context/BookViewerContext'
+import ToggleNavbar from './buttons/ToggleNavbar'
 
 const navLinks = [
 	{
@@ -37,15 +35,8 @@ const navLinks = [
 const Navbar = () => {
 	const theme = useTheme()
 	const matches = useMediaQuery(theme.breakpoints.up('md'))
-	const { navIsExpanded, setNavIsExpanded } = useContext(BookViewerContext)
 	const { isDarkMode, themeColor } = useContext(ThemeContext)
-
-	useEffect(() => {
-		return () => {
-			if (matches) setNavIsExpanded(false)
-			if (!matches) setNavIsExpanded(true)
-		}
-	}, [matches, setNavIsExpanded])
+	const { navIsExpanded, setNavIsExpanded } = useContext(BookViewerContext)
 
 	return (
 		<Box
@@ -135,20 +126,7 @@ const Navbar = () => {
 					justifyContent="center"
 					alignItems="flex-end"
 				>
-					<TextToSpeechToggle />
-					<Tooltip id="navbar-toggle-tooltip" title="Toggle navbar">
-						<IconButton
-							id="expand-button"
-							color="inherit"
-							onClick={() => setNavIsExpanded(navExpanded => !navExpanded)}
-						>
-							{navIsExpanded ? (
-								<ArrowDropUpIcon id="retract-icon" fontSize="large" />
-							) : (
-								<ArrowDropDownIcon id="expand-icon" fontSize="large" />
-							)}
-						</IconButton>
-					</Tooltip>
+					<ToggleNavbar />
 				</Box>
 			)}
 		</Box>

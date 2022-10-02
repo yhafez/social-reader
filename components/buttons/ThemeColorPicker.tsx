@@ -29,7 +29,6 @@ const ThemeColorPicker = () => {
 							onChangeComplete={newColor => {
 								const { r, g, b, a = 1 } = newColor.rgb
 								setThemeColor(`rgba(${r},${g},${b},${a})`)
-								setDisplayThemeColorSelector(false)
 							}}
 						/>
 					</Box>

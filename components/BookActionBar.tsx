@@ -9,6 +9,7 @@ import ColorModeSwitch from './buttons/ColorModeSwitch'
 import ThemeColorPicker from './buttons/ThemeColorPicker'
 
 import { ThemeContext } from '../context/ThemeContext'
+import TextToSpeechToggle from './buttons/TextToSpeechToggle'
 
 const BookActionBar = () => {
 	const { themeColor } = useContext(ThemeContext)
@@ -41,10 +42,11 @@ const BookActionBar = () => {
 					width="100%"
 					mr={1}
 				>
+					<TextToSpeechToggle />
+					<ChangeVoice />
 					<ChangeFont increase />
 					<ChangeFont />
 					<ToggleAnnotations />
-					<ChangeVoice />
 					<HighlightColorPicker />
 					<ThemeColorPicker />
 				</Box>

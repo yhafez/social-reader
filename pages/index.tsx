@@ -1,7 +1,5 @@
 import { useEffect, useContext } from 'react'
 import { Box } from '@mui/material'
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
 
 import BookViewer from '../components/BookViewer'
 import Navbar from '../components/Navbar'
@@ -24,25 +22,23 @@ const Home = ({ chapters }: IChapters) => {
 	}, [setColorMode])
 
 	return (
-		<DndProvider backend={HTML5Backend}>
-			<Box
-				id="app"
-				className="app"
-				position="absolute"
-				top="0"
-				left="0"
-				right="0"
-				bottom="0"
-				height="100vh"
-				width="100vw"
-				color={isDarkMode ? 'white' : 'black'}
-				sx={{ backgroundColor: isDarkMode ? '#242424' : 'white' }}
-			>
-				<Navbar />
-				<BookViewer chapters={chapters} />
-				<BookActionBar />
-			</Box>
-		</DndProvider>
+		<Box
+			id="app"
+			className="app"
+			position="absolute"
+			top="0"
+			left="0"
+			right="0"
+			bottom="0"
+			height="100vh"
+			width="100vw"
+			color={isDarkMode ? 'white' : 'black'}
+			sx={{ backgroundColor: isDarkMode ? '#242424' : 'white' }}
+		>
+			<Navbar />
+			<BookViewer chapters={chapters} />
+			<BookActionBar />
+		</Box>
 	)
 }
 
