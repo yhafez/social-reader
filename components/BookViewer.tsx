@@ -35,7 +35,7 @@ const BookViewer = () => {
 			flexDirection={matches ? 'column' : 'row'}
 		>
 			{!matches && <BookNav side="left" epubLength={chapters.length || 0} />}
-			{<ChapterView chapter={chapters[chapter]} chapterIndex={chapter} />}
+			{<ChapterView />}
 			{!matches && <BookNav side="right" epubLength={chapters.length || 0} />}
 			{matches && (
 				<Box

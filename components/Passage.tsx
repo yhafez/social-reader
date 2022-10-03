@@ -1,8 +1,9 @@
-import { useContext, Fragment } from 'react'
+import { useState, useEffect, useContext, Fragment } from 'react'
 import { Box } from '@mui/material'
 import Image from 'next/future/image'
 import { BookViewerContext } from '../context/BookViewerContext'
 import { IChapterImage } from '../pages/api/epub'
+import Word from './Word'
 
 const Passage = ({
 	passage,
@@ -15,36 +16,32 @@ const Passage = ({
 	chapterIndex: number
 	chapterImages: IChapterImage[]
 }) => {
-	const { fontSize, highlightColor, highlightHoverColor, annotationsAreVisible, imagesAreVisible } =
+	const { imagesAreVisible, speech, isPlaying, setIsPlaying, highlightHoverColor } =
 		useContext(BookViewerContext)
+	const [isSpeaking, setIsSpeaking] = useState(false)
 
-	const handleHover = (
-		e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-		currentlyHovering: boolean,
-	) => {
-		if (!annotationsAreVisible) return
-		const hoveredElement = e.target as HTMLElement
-
-		if (currentlyHovering && hoveredElement.className.includes('-to-')) {
-			const querySelector =
-				'.' + hoveredElement.className.split(' ').find(className => className.includes('-to-'))
-
-			const highlightedSelectionElements: NodeListOf<HTMLElement> =
-				document.querySelectorAll(querySelector)
-			highlightedSelectionElements.forEach(element => {
-				element.style.backgroundColor = highlightHoverColor
-				element.style.cursor = 'pointer'
-			})
-		} else if (!currentlyHovering && hoveredElement.className.includes('-to-')) {
-			const highlightedSelectionElements: NodeListOf<HTMLElement> = document.querySelectorAll(
-				'.' + hoveredElement.className.split(' ')[1],
-			)
-			highlightedSelectionElements.forEach(element => {
-				element.style.backgroundColor = highlightColor
-				element.style.cursor = 'default'
+	useEffect(() => {
+		if (isPlaying) {
+			speech.speak({
+				text: passage?.replaceAll(/@([\w\W]+?)@/g, ''),
+				queue: true,
+				listeners: {
+					onstart: () => {
+						setIsPlaying(true)
+						setIsSpeaking(true)
+					},
+					onend: () => {
+						setIsSpeaking(false)
+						setIsPlaying(false)
+					},
+					onpause: () => {
+						setIsSpeaking(false)
+						setIsPlaying(false)
+					},
+				},
 			})
 		}
-	}
+	}, [speech, setIsPlaying, isPlaying, passage])
 
 	return (
 		<Fragment>
@@ -81,15 +78,22 @@ const Passage = ({
 						)}
 					</Fragment>
 				) : (
-					<span
-						id={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}`}
-						key={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}`}
-						onMouseEnter={e => handleHover(e, true)}
-						onMouseLeave={e => handleHover(e, false)}
-						style={{ fontSize: `${fontSize}rem` }}
-					>
-						{word}{' '}
-					</span>
+					<Fragment key={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}`}>
+						<span
+							id={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}-container`}
+							style={{ backgroundColor: isSpeaking ? highlightHoverColor : '' }}
+						>
+							<Word
+								word={word}
+								wordIndex={wordIndex}
+								passageIndex={passageIndex}
+								chapterIndex={chapterIndex}
+							/>
+						</span>
+						<span id={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}-space`}>
+							{' '}
+						</span>
+					</Fragment>
 				),
 			)}
 			<br id={`passage-line-break-${passageIndex}`} />

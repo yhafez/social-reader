@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react'
 import { Box } from '@mui/material'
 
 import Passage from './Passage'
-import { highlightText } from '../utils/helpers'
+import { processHighlightText } from '../utils/helpers'
 import { BookViewerContext } from '../context/BookViewerContext'
 import { IParsedChapter } from '../pages/api/epub'
 export interface IBookSelection extends Range {
@@ -24,7 +24,7 @@ const ChapterView = () => {
 			) {
 				const key = `${range.startContainer.parentElement.id}-to-${range.endContainer.parentElement.id}`
 				if (annotationsAreVisible)
-					highlightText(
+					processHighlightText(
 						range.startContainer.parentElement,
 						range.endContainer.parentElement,
 						key,

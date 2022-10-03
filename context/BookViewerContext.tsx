@@ -18,6 +18,10 @@ export interface IBookViewerState {
 	setChapters: Dispatch<SetStateAction<IParsedChapter[]>>
 	chapter: number
 	setChapter: Dispatch<SetStateAction<number>>
+	isPlaying: boolean
+	setIsPlaying: Dispatch<SetStateAction<boolean>>
+	speech: any
+	setSpeech: Dispatch<SetStateAction<any | null>>
 }
 
 export const BookViewerContext = createContext<IBookViewerState>({
@@ -37,6 +41,10 @@ export const BookViewerContext = createContext<IBookViewerState>({
 	setChapters: () => null,
 	chapter: 0,
 	setChapter: () => null,
+	speech: null,
+	setSpeech: () => null,
+	isPlaying: false,
+	setIsPlaying: () => null,
 })
 
 const BookViewerProvider = ({ children }: { children: ReactNode }) => {
@@ -48,6 +56,8 @@ const BookViewerProvider = ({ children }: { children: ReactNode }) => {
 	const [imagesAreVisible, setImagesAreVisible] = useState(true)
 	const [chapters, setChapters] = useState<IParsedChapter[]>([])
 	const [chapter, setChapter] = useState(0)
+	const [isPlaying, setIsPlaying] = useState(false)
+	const [speech, setSpeech] = useState<any | null>(null)
 
 	return (
 		<BookViewerContext.Provider
@@ -68,6 +78,10 @@ const BookViewerProvider = ({ children }: { children: ReactNode }) => {
 				setChapters,
 				chapter,
 				setChapter,
+				isPlaying,
+				setIsPlaying,
+				speech,
+				setSpeech,
 			}}
 		>
 			{children}

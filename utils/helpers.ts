@@ -1,43 +1,48 @@
-export function isBeforeElement(first_id: string, second_id: string) {
-	return (
-		document.querySelectorAll('#' + first_id + ', #' + second_id)[0] ===
-		document.getElementById(first_id)
-	)
+export function highlightText(startContainer: HTMLElement, highlightColor: string, key: string) {
+	startContainer.style.backgroundColor = highlightColor
+	if (!startContainer.className.includes('highlight')) startContainer.className = `highlight`
+	if (!startContainer.className.includes(key)) startContainer.className += ` ${key}`
 }
 
-export function highlightText(
+export function processHighlightText(
 	startContainer: HTMLElement,
 	endContainer: HTMLElement,
 	key: string,
 	highlightColor: string,
 ) {
-	if (startContainer === endContainer) {
-		startContainer.style.backgroundColor = highlightColor
-		if (!startContainer.className.includes('highlight')) startContainer.className = `highlight`
-		if (!startContainer.className.includes(key)) startContainer.className += ` ${key}`
+	if (startContainer === endContainer || startContainer.children[0] === endContainer) {
+		highlightText(startContainer, highlightColor, key)
 	} else {
-		if (startContainer.id && endContainer.id) {
-			if (
-				isBeforeElement(startContainer.id, endContainer.id) &&
-				startContainer.nextElementSibling
-			) {
-				startContainer.style.backgroundColor = highlightColor
-				if (!startContainer.className.includes('highlight')) startContainer.className = `highlight`
-				startContainer.className += ` ${key}`
-				highlightText(
-					(startContainer.nextElementSibling.children[0] ||
-						startContainer.nextElementSibling) as HTMLElement,
+		if (startContainer?.id && endContainer?.id) {
+			if (startContainer.id.includes('container')) {
+				highlightText(startContainer?.children[0] as HTMLElement, highlightColor, key)
+				processHighlightText(
+					startContainer.nextElementSibling as HTMLElement,
 					endContainer,
 					key,
 					highlightColor,
 				)
-			} else if (startContainer.previousElementSibling) {
-				startContainer.style.backgroundColor = highlightColor
-				if (!startContainer.className.includes('highlight')) startContainer.className = `highlight`
-				startContainer.className += ` ${key}`
-				highlightText(
-					(startContainer.previousElementSibling.children[0] ||
-						startContainer.previousElementSibling) as HTMLElement,
+			} else if (startContainer?.nextElementSibling) {
+				highlightText(startContainer, highlightColor, key)
+				processHighlightText(
+					startContainer.nextElementSibling as HTMLElement,
+					endContainer,
+					key,
+					highlightColor,
+				)
+			} else if (startContainer?.parentElement?.nextElementSibling?.children[0]) {
+				highlightText(startContainer, highlightColor, key)
+				processHighlightText(
+					startContainer?.parentElement?.nextElementSibling?.children[0] as HTMLElement,
+					endContainer,
+					key,
+					highlightColor,
+				)
+			} else if (startContainer?.parentElement?.nextElementSibling) {
+				highlightText(startContainer, highlightColor, key)
+				processHighlightText(
+					(startContainer?.parentElement?.nextElementSibling?.children[0] ||
+						startContainer?.parentElement?.nextElementSibling) as HTMLElement,
 					endContainer,
 					key,
 					highlightColor,

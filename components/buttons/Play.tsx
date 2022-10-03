@@ -5,49 +5,48 @@ import { IconButton, Tooltip } from '@mui/material'
 
 import { BookViewerContext } from '../../context/BookViewerContext'
 
-const Play = ({ speech }: { speech: any }) => {
-	const { chapters, chapter } = useContext(BookViewerContext)
-	const [isSpeaking, setIsSpeaking] = useState(false)
+const Play = () => {
+	const { chapters, chapter, isPlaying, setIsPlaying, speech } = useContext(BookViewerContext)
 
 	const chapterText = chapters[chapter]?.text
 
 	const handlePlay = () => {
-		setIsSpeaking(true)
-		if (speech.pending()) {
-			speech.resume()
-		} else
-			speech.speak({
-				text: chapterText?.replaceAll(/@([\w\W]+?)@/g, ''),
-				queue: false,
-				listeners: {
-					onend: () => {
-						setIsSpeaking(false)
-					},
-					onpause: () => {
-						setIsSpeaking(false)
-					},
-					onboundary: (event: any) => {
-						console.log(event)
-						speech.pause()
-					},
-				},
-			})
+		setIsPlaying(true)
+		// if (speech.pending()) {
+		// 	speech.resume()
+		// } else
+		// 	speech.speak({
+		// 		text: chapterText?.replaceAll(/@([\w\W]+?)@/g, ''),
+		// 		queue: false,
+		// 		listeners: {
+		// 			onend: () => {
+		// 				setIsSpeaking(false)
+		// 			},
+		// 			onpause: () => {
+		// 				setIsSpeaking(false)
+		// 			},
+		// 			onboundary: (event: any) => {
+		// 				console.log(event)
+		// 				speech.pause()
+		// 			},
+		// 		},
+		// 	})
 	}
 
 	const handlePause = () => {
-		setIsSpeaking(false)
+		setIsPlaying(false)
 		speech.cancel()
 	}
 
 	useEffect(() => {
 		if (speech?.speaking()) {
-			setIsSpeaking(true)
+			setIsPlaying(true)
 		}
-	}, [speech])
+	}, [speech, setIsPlaying])
 
 	return (
 		<Tooltip id="play-audio-tooltip" title="Select highlight color">
-			{isSpeaking ? (
+			{isPlaying ? (
 				<IconButton id="pause-audio-button" color="inherit" onClick={handlePause}>
 					<PauseIcon id="pause-audio-icon" sx={{ cursor: 'pointer' }} />
 				</IconButton>

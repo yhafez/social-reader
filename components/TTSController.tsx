@@ -8,6 +8,7 @@ import AdjustPitch from './buttons/AdjustPitch'
 import AdjustVolume from './buttons/AdjustVolume'
 import AdjustRate from './buttons/AdjustRate'
 import { ThemeContext } from '../context/ThemeContext'
+import { BookViewerContext } from '../context/BookViewerContext'
 import Play from './buttons/Play'
 
 export interface ISpeechData {
@@ -23,7 +24,8 @@ export interface ISpeechData {
 
 const TTSController = ({ setIsOpen }: { setIsOpen: Dispatch<SetStateAction<boolean>> }) => {
 	const { isDarkMode } = useContext(ThemeContext)
-	const [speech, setSpeech] = useState<any>(null)
+	const { setSpeech } = useContext(BookViewerContext)
+
 	const [volume, setVolume] = useState(1)
 	const [rate, setRate] = useState(1)
 	const [pitch, setPitch] = useState(1)
@@ -32,9 +34,7 @@ const TTSController = ({ setIsOpen }: { setIsOpen: Dispatch<SetStateAction<boole
 
 	useEffect(() => {
 		const speech = new Speech()
-		if (speech.hasBrowserSupport()) {
-			setSpeech(speech)
-			speech.cancel()
+		if (speech?.hasBrowserSupport()) {
 			speech
 				.init({
 					volume,
@@ -44,15 +44,17 @@ const TTSController = ({ setIsOpen }: { setIsOpen: Dispatch<SetStateAction<boole
 					lang: voice?.lang,
 					splitSentences: true,
 				})
-				.then((data: ISpeechData) => setVoices(data.voices))
+				.then((data: ISpeechData) => {
+					setVoices(data.voices)
+					setSpeech(speech)
+				})
 				.catch((e: Error) =>
 					console.error('There was a problem initializing text to speech reader:', e),
 				)
-			speech.resume()
 		} else {
 			console.error('speech synthesis not supported')
 		}
-	}, [pitch, volume, rate, voice, setVoices])
+	}, [pitch, volume, rate, voice, setSpeech, setVoices])
 
 	return (
 		<Box
@@ -69,7 +71,7 @@ const TTSController = ({ setIsOpen }: { setIsOpen: Dispatch<SetStateAction<boole
 			<AdjustPitch pitch={pitch} setPitch={setPitch} />
 			<AdjustVolume volume={volume} setVolume={setVolume} />
 			<AdjustRate rate={rate} setRate={setRate} />
-			<Play speech={speech} />
+			<Play />
 			<Close name="tts-controller" setIsOpen={setIsOpen} />
 		</Box>
 	)
