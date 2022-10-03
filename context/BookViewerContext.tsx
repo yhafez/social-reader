@@ -22,6 +22,8 @@ export interface IBookViewerState {
 	setIsPlaying: Dispatch<SetStateAction<boolean>>
 	speech: any
 	setSpeech: Dispatch<SetStateAction<any | null>>
+	highlightSpeech: boolean
+	setHighlightSpeech: Dispatch<SetStateAction<boolean>>
 }
 
 export const BookViewerContext = createContext<IBookViewerState>({
@@ -45,6 +47,8 @@ export const BookViewerContext = createContext<IBookViewerState>({
 	setSpeech: () => null,
 	isPlaying: false,
 	setIsPlaying: () => null,
+	highlightSpeech: true,
+	setHighlightSpeech: () => null,
 })
 
 const BookViewerProvider = ({ children }: { children: ReactNode }) => {
@@ -58,6 +62,7 @@ const BookViewerProvider = ({ children }: { children: ReactNode }) => {
 	const [chapter, setChapter] = useState(0)
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [speech, setSpeech] = useState<any | null>(null)
+	const [highlightSpeech, setHighlightSpeech] = useState(true)
 
 	return (
 		<BookViewerContext.Provider
@@ -82,6 +87,8 @@ const BookViewerProvider = ({ children }: { children: ReactNode }) => {
 				setIsPlaying,
 				speech,
 				setSpeech,
+				highlightSpeech,
+				setHighlightSpeech,
 			}}
 		>
 			{children}

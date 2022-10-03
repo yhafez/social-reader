@@ -16,8 +16,14 @@ const Passage = ({
 	chapterIndex: number
 	chapterImages: IChapterImage[]
 }) => {
-	const { imagesAreVisible, speech, isPlaying, setIsPlaying, highlightHoverColor } =
-		useContext(BookViewerContext)
+	const {
+		imagesAreVisible,
+		speech,
+		isPlaying,
+		setIsPlaying,
+		highlightHoverColor,
+		highlightSpeech,
+	} = useContext(BookViewerContext)
 	const [isSpeaking, setIsSpeaking] = useState(false)
 
 	useEffect(() => {
@@ -81,7 +87,7 @@ const Passage = ({
 					<span
 						id={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}-container`}
 						key={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}`}
-						style={{ backgroundColor: isSpeaking ? highlightHoverColor : '' }}
+						style={{ backgroundColor: isSpeaking && highlightSpeech ? highlightHoverColor : '' }}
 					>
 						<Word
 							word={word}

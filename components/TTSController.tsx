@@ -7,6 +7,7 @@ import ChangeVoice from './buttons/ChangeVoice'
 import AdjustPitch from './buttons/AdjustPitch'
 import AdjustVolume from './buttons/AdjustVolume'
 import AdjustRate from './buttons/AdjustRate'
+import ToggleHighlightSpeech from './buttons/ToggleHighlightSpeech'
 import { ThemeContext } from '../context/ThemeContext'
 import { BookViewerContext } from '../context/BookViewerContext'
 import Play from './buttons/Play'
@@ -67,6 +68,7 @@ const TTSController = ({ setIsOpen }: { setIsOpen: Dispatch<SetStateAction<boole
 				backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)',
 			}}
 		>
+			<ToggleHighlightSpeech />
 			<ChangeVoice voices={voices} setVoice={setVoice} />
 			<AdjustPitch pitch={pitch} setPitch={setPitch} />
 			<AdjustVolume volume={volume} setVolume={setVolume} />
