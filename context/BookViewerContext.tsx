@@ -32,6 +32,8 @@ export interface IBookViewerState {
 	setVolume: Dispatch<SetStateAction<number>>
 	voice: SpeechSynthesisVoice | null
 	setVoice: Dispatch<SetStateAction<SpeechSynthesisVoice | null>>
+	ttsIsOpen: boolean
+	setTtsIsOpen: Dispatch<SetStateAction<boolean>>
 }
 
 export const BookViewerContext = createContext<IBookViewerState>({
@@ -65,6 +67,8 @@ export const BookViewerContext = createContext<IBookViewerState>({
 	setVolume: () => null,
 	voice: null,
 	setVoice: () => null,
+	ttsIsOpen: false,
+	setTtsIsOpen: () => null,
 })
 
 const BookViewerProvider = ({ children }: { children: ReactNode }) => {
@@ -83,6 +87,7 @@ const BookViewerProvider = ({ children }: { children: ReactNode }) => {
 	const [rate, setRate] = useState(1)
 	const [volume, setVolume] = useState(1)
 	const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null)
+	const [ttsIsOpen, setTtsIsOpen] = useState(false)
 
 	return (
 		<BookViewerContext.Provider
@@ -117,6 +122,8 @@ const BookViewerProvider = ({ children }: { children: ReactNode }) => {
 				setVolume,
 				voice,
 				setVoice,
+				ttsIsOpen,
+				setTtsIsOpen,
 			}}
 		>
 			{children}

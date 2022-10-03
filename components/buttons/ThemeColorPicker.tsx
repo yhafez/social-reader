@@ -4,10 +4,12 @@ import { Box, ClickAwayListener, IconButton, Tooltip } from '@mui/material'
 import ColorLensIcon from '@mui/icons-material/ColorLens'
 
 import { ThemeContext } from '../../context/ThemeContext'
+import { BookViewerContext } from '../../context/BookViewerContext'
 
 const ThemeColorPicker = () => {
+	const { ttsIsOpen, setTtsIsOpen } = useContext(BookViewerContext)
 	const { themeColor, setThemeColor } = useContext(ThemeContext)
-	const [displayThemeColorSelector, setDisplayThemeColorSelector] = useState(false)
+	const [isOpen, setIsOpen] = useState(false)
 
 	useEffect(() => {
 		const storedThemeColor = localStorage.getItem('themeColor')
@@ -19,15 +21,18 @@ const ThemeColorPicker = () => {
 			<Tooltip id="theme-color-button-tooltip" title="Change theme color">
 				<IconButton
 					id="theme-color-button"
-					color={displayThemeColorSelector ? 'primary' : 'inherit'}
+					color={isOpen ? 'primary' : 'inherit'}
 					sx={{ cursor: 'pointer' }}
-					onClick={() => setDisplayThemeColorSelector(true)}
+					onClick={() => {
+						if (ttsIsOpen) setTtsIsOpen(false)
+						setIsOpen(true)
+					}}
 				>
 					<ColorLensIcon id="theme-color-icon" />
 				</IconButton>
 			</Tooltip>
-			{displayThemeColorSelector && (
-				<ClickAwayListener onClickAway={() => setDisplayThemeColorSelector(false)}>
+			{isOpen && (
+				<ClickAwayListener onClickAway={() => setIsOpen(false)}>
 					<Box position="absolute" right={12} bottom={48} sx={{ cursor: 'pointer' }}>
 						<SketchPicker
 							color={themeColor}

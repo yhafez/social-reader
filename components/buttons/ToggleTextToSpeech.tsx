@@ -1,16 +1,17 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useContext } from 'react'
 import { IconButton, Tooltip } from '@mui/material'
 import CampaignIcon from '@mui/icons-material/Campaign'
 
 import TTSController from '../TTSController'
+import { BookViewerContext } from '../../context/BookViewerContext'
 
 const TextToSpeechToggle = () => {
-	const [isOpen, setIsOpen] = useState(false)
+	const { ttsIsOpen, setTtsIsOpen } = useContext(BookViewerContext)
 
 	useEffect(() => {
-		const storedIsOpen = localStorage.getItem('ttsIsOpen')
-		if (storedIsOpen) setIsOpen(JSON.parse(storedIsOpen))
-	}, [])
+		const storedTTSIsOpen = localStorage.getItem('ttsIsOpen')
+		if (storedTTSIsOpen) setTtsIsOpen(JSON.parse(storedTTSIsOpen))
+	}, [setTtsIsOpen])
 
 	return (
 		<>
@@ -18,15 +19,15 @@ const TextToSpeechToggle = () => {
 				<IconButton
 					id="text-to-speech-button"
 					onClick={() => {
-						localStorage.setItem('ttsIsOpen', JSON.stringify(!isOpen))
-						setIsOpen(open => !open)
+						localStorage.setItem('ttsIsOpen', JSON.stringify(!ttsIsOpen))
+						setTtsIsOpen(open => !open)
 					}}
-					color={isOpen ? 'primary' : 'inherit'}
+					color={ttsIsOpen ? 'primary' : 'inherit'}
 				>
 					<CampaignIcon id="voices-icon" sx={{ cursor: 'pointer' }} />
 				</IconButton>
 			</Tooltip>
-			{isOpen && <TTSController setIsOpen={setIsOpen} />}
+			{ttsIsOpen && <TTSController setIsOpen={setTtsIsOpen} />}
 		</>
 	)
 }

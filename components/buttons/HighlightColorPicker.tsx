@@ -10,8 +10,8 @@ import { HuePicker } from 'react-color'
 const HighlightColorPicker = () => {
 	const theme = useTheme()
 	const matches = useMediaQuery(theme.breakpoints.up('sm'))
-	const [displayHighlightColorSelector, setDisplayHighlightColorSelector] = useState(false)
-	const { highlightColor, setHighlightColor, setHighlightHoverColor } =
+	const [isOpen, setIsOpen] = useState(false)
+	const { highlightColor, setHighlightColor, setHighlightHoverColor, ttsIsOpen, setTtsIsOpen } =
 		useContext(BookViewerContext)
 
 	useEffect(() => {
@@ -29,14 +29,17 @@ const HighlightColorPicker = () => {
 			<Tooltip id="highlight-color-picker-tooltip" title="Select highlight color">
 				<IconButton
 					id="highlight-color-picker-button"
-					color={displayHighlightColorSelector ? 'primary' : 'inherit'}
-					onClick={() => setDisplayHighlightColorSelector(colorPickerIsOpen => !colorPickerIsOpen)}
+					color={isOpen ? 'primary' : 'inherit'}
+					onClick={() => {
+						if (ttsIsOpen) setTtsIsOpen(false)
+						setIsOpen(true)
+					}}
 				>
 					<BorderColorIcon id="highlight-color-icon" sx={{ cursor: 'pointer' }} />
 				</IconButton>
 			</Tooltip>
-			{displayHighlightColorSelector && (
-				<ClickAwayListener onClickAway={() => setDisplayHighlightColorSelector(false)}>
+			{isOpen && (
+				<ClickAwayListener onClickAway={() => setIsOpen(false)}>
 					<Box position="absolute" right={12} bottom={48} sx={{ cursor: 'pointer' }}>
 						<HuePicker
 							color={highlightColor}
