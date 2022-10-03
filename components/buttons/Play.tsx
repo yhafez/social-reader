@@ -17,7 +17,7 @@ const Play = ({ speech }: { speech: any }) => {
 			speech.resume()
 		} else
 			speech.speak({
-				text: chapterText,
+				text: chapterText?.replaceAll(/@([\w\W]+?)@/g, ''),
 				queue: false,
 				listeners: {
 					onend: () => {
@@ -25,6 +25,10 @@ const Play = ({ speech }: { speech: any }) => {
 					},
 					onpause: () => {
 						setIsSpeaking(false)
+					},
+					onboundary: (event: any) => {
+						console.log(event)
+						speech.pause()
 					},
 				},
 			})
