@@ -10,7 +10,8 @@ import AdjustRate from './buttons/AdjustRate'
 import ToggleHighlightSpeech from './buttons/ToggleHighlightSpeech'
 import { ThemeContext } from '../context/ThemeContext'
 import { BookViewerContext } from '../context/BookViewerContext'
-import Play from './buttons/PlayPause'
+import PlayPause from './buttons/PlayPause'
+import Stop from './buttons/Stop'
 
 export interface ISpeechData {
 	browserSupport: boolean
@@ -73,7 +74,8 @@ const TTSController = ({ setIsOpen }: { setIsOpen: Dispatch<SetStateAction<boole
 			<AdjustPitch pitch={pitch} setPitch={setPitch} />
 			<AdjustVolume volume={volume} setVolume={setVolume} />
 			<AdjustRate rate={rate} setRate={setRate} />
-			<Play />
+			<PlayPause />
+			<Stop />
 			<Close name="tts-controller" setIsOpen={setIsOpen} />
 		</Box>
 	)

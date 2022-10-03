@@ -37,7 +37,6 @@ const Passage = ({
 						setIsSpeaking(true)
 					},
 					onresume: () => {
-						setIsPlaying(true)
 						setIsSpeaking(true)
 					},
 					onend: () => {
@@ -46,7 +45,6 @@ const Passage = ({
 					},
 					onpause: () => {
 						setIsSpeaking(false)
-						setIsPlaying(false)
 					},
 				},
 			})

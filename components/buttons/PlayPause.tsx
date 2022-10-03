@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react'
+import { useContext } from 'react'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import PauseIcon from '@mui/icons-material/Pause'
 import { IconButton, Tooltip } from '@mui/material'
@@ -17,12 +17,6 @@ const PlayPause = () => {
 		setIsPlaying(false)
 		speech.pause()
 	}
-
-	// useEffect(() => {
-	// 	if (speech?.speaking()) {
-	// 		setIsPlaying(true)
-	// 	}
-	// }, [speech, setIsPlaying])
 
 	return isPlaying ? (
 		<Tooltip id="pause-audio-tooltip" title="Pause text-to-speech">
