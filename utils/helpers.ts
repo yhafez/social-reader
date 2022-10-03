@@ -1,3 +1,51 @@
+export function handleHighlight(
+	startContainer: Node,
+	endContainer: Node,
+	annotationsAreVisible: boolean,
+	highlightColor: string,
+	isSelected = false,
+) {
+	if (
+		startContainer &&
+		endContainer &&
+		startContainer.parentElement &&
+		endContainer.parentElement
+	) {
+		const key = `${startContainer.parentElement.id}-to-${endContainer.parentElement.id} ${
+			isSelected ? 'selected' : ''
+		}`
+		if (annotationsAreVisible)
+			processHighlightText(
+				startContainer.parentElement,
+				endContainer.parentElement,
+				key,
+				highlightColor,
+			)
+		else
+			(document.querySelectorAll(`.${key}`) as NodeListOf<HTMLElement>).forEach(
+				element => (element.style.backgroundColor = 'transparent'),
+			)
+	}
+}
+
+export function handleRemoveHighlight(startContainer: Node, endContainer: Node) {
+	if (
+		startContainer &&
+		endContainer &&
+		startContainer.parentElement &&
+		endContainer.parentElement
+	) {
+		const key = `${startContainer.parentElement.id}-to-${endContainer.parentElement.id}`
+
+		const highlightedElements: NodeListOf<HTMLElement> = document.querySelectorAll(`.${key}`)
+
+		highlightedElements.forEach(element => {
+			element.classList.remove(key, 'highlight', 'selected')
+			element.style.backgroundColor = 'transparent'
+		})
+	}
+}
+
 export function highlightText(startContainer: HTMLElement, highlightColor: string, key: string) {
 	startContainer.style.backgroundColor = highlightColor
 	if (!startContainer.className.includes('highlight')) startContainer.className = `highlight`

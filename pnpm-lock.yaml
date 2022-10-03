@@ -2400,6 +2400,7 @@ packages:
       '@emotion/is-prop-valid': 1.2.0
       '@mui/types': 7.2.0_@types+react@18.0.21
       '@mui/utils': 5.10.6_react@18.2.0
+      '@popOverjs/core': 2.11.6
       '@popperjs/core': 2.11.6
       '@types/react': 18.0.21
       clsx: 1.2.1
@@ -2766,6 +2767,10 @@ packages:
       source-map: 0.7.4
       webpack: 5.74.0
     dev: true
+
+  /@popOverjs/core/2.11.6:
+    resolution: {integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==}
+    dev: false
 
   /@popperjs/core/2.11.6:
     resolution: {integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==}

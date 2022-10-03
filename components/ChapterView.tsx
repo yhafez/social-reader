@@ -1,42 +1,40 @@
-import { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, MouseEvent } from 'react'
 import { Box } from '@mui/material'
 
 import Passage from './Passage'
-import { processHighlightText } from '../utils/helpers'
+import { handleHighlight, processHighlightText } from '../utils/helpers'
 import { BookViewerContext } from '../context/BookViewerContext'
-import { IParsedChapter } from '../pages/api/epub'
 export interface IBookSelection extends Range {
 	id: string
 }
 
 const ChapterView = () => {
-	const { annotationsAreVisible, highlightColor, chapters, chapter } = useContext(BookViewerContext)
-	const [ranges, setRanges] = useState<Range[]>([])
+	const { annotationsAreVisible, highlightColor, highlightHoverColor, chapters, chapter } =
+		useContext(BookViewerContext)
+	const [ranges, setRanges] = useState<IBookSelection[]>([])
+	const [selectedRange, setSelectedRange] = useState<IBookSelection | null>(null)
 	const chapterText = chapters[chapter]?.text
 
 	useEffect(() => {
-		ranges.map(range => {
-			if (
-				range.startContainer &&
-				range.endContainer &&
-				range.startContainer.parentElement &&
-				range.endContainer.parentElement
-			) {
-				const key = `${range.startContainer.parentElement.id}-to-${range.endContainer.parentElement.id}`
-				if (annotationsAreVisible)
-					processHighlightText(
-						range.startContainer.parentElement,
-						range.endContainer.parentElement,
-						key,
-						highlightColor,
-					)
-				else
-					(document.querySelectorAll(`.${key}`) as NodeListOf<HTMLElement>).forEach(
-						element => (element.style.backgroundColor = 'transparent'),
-					)
+		ranges.forEach(range => {
+			if (range?.id === selectedRange?.id) {
+				handleHighlight(
+					range?.startContainer,
+					range?.endContainer,
+					annotationsAreVisible,
+					highlightHoverColor,
+					true,
+				)
+			} else {
+				handleHighlight(
+					range?.startContainer,
+					range?.endContainer,
+					annotationsAreVisible,
+					highlightColor,
+				)
 			}
 		})
-	}, [ranges, annotationsAreVisible, highlightColor])
+	}, [ranges, annotationsAreVisible, highlightColor, selectedRange, highlightHoverColor])
 
 	const passages = chapterText?.split('\n\n')
 
@@ -53,6 +51,7 @@ const ChapterView = () => {
 		) {
 			rangeObj.id = `${rangeObj.startContainer.parentElement.id}-to-${rangeObj.endContainer.parentElement.id}`
 			setRanges([...ranges, rangeObj])
+			setSelectedRange(rangeObj)
 		}
 	}
 
@@ -100,11 +99,13 @@ const ChapterView = () => {
 		>
 			{passages?.map((passage, passageIndex) => (
 				<Passage
-					chapterImages={chapters[chapter]?.images}
 					key={`passage-${passageIndex}-container`}
+					chapterImages={chapters[chapter]?.images}
 					passage={passage}
 					passageIndex={passageIndex}
 					chapterIndex={chapter}
+					selectedRange={selectedRange}
+					setRanges={setRanges}
 				/>
 			))}
 		</Box>

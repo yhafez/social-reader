@@ -3,7 +3,7 @@ import { Box } from '@mui/material'
 
 import ChangeFont from './buttons/ChangeFont'
 import ToggleAnnotations from './buttons/ToggleAnnotations'
-import HighlightColorPicker from './buttons/HighlightColorPicker'
+import Highlight from './buttons/Highlight'
 import ColorModeSwitch from './buttons/ColorModeSwitch'
 import ThemeColorPicker from './buttons/ThemeColorPicker'
 import ToggleImages from './buttons/ToggleImages'
@@ -48,7 +48,7 @@ const BookActionBar = () => {
 					<ChangeFont />
 					<ToggleAnnotations />
 					<ToggleImages />
-					<HighlightColorPicker />
+					<Highlight buttonType="colorPicker" />
 					<ThemeColorPicker />
 					<ResetSettings />
 				</Box>

@@ -24,7 +24,7 @@ const Word = ({
 		const hoveredElement = e.target as HTMLElement
 
 		if (currentlyHovering && hoveredElement.className.includes('-to-')) {
-			const querySelector =
+			const querySelector: string =
 				'.' + hoveredElement.className.split(' ').find(className => className.includes('-to-'))
 
 			const highlightedSelectionElements: NodeListOf<HTMLElement> =
@@ -38,7 +38,9 @@ const Word = ({
 				'.' + hoveredElement.className.split(' ')[1],
 			)
 			highlightedSelectionElements.forEach(element => {
-				element.style.backgroundColor = highlightColor
+				element.style.backgroundColor = element.className.includes('selected')
+					? highlightHoverColor
+					: highlightColor
 				element.style.cursor = 'default'
 			})
 		}
