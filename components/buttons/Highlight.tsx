@@ -1,4 +1,4 @@
-import { useEffect, useContext, useState, Dispatch, SetStateAction } from 'react'
+import { useEffect, useContext, useState } from 'react'
 import { Box, ClickAwayListener, IconButton, Tooltip } from '@mui/material'
 import BorderColorIcon from '@mui/icons-material/BorderColor'
 import { useTheme } from '@mui/material/styles'
@@ -10,13 +10,11 @@ import { SliderPicker, AlphaPicker } from 'react-color'
 const Highlight = ({
 	buttonType,
 	handleClosePopOver,
-	setHighlightSelection,
 	style,
 	iconProps,
 }: {
 	buttonType: 'colorPicker' | 'highlight'
 	handleClosePopOver?: (highlightSelection: boolean) => void
-	setHighlightSelection?: Dispatch<SetStateAction<boolean>>
 	style?: { [key: string]: any }
 	iconProps?: { [key: string]: any }
 }) => {
@@ -40,10 +38,7 @@ const Highlight = ({
 		if (buttonType === 'colorPicker') {
 			if (ttsIsOpen) setTtsIsOpen(false)
 			setIsOpen(true)
-		} else {
-			setHighlightSelection && setHighlightSelection(true)
-			handleClosePopOver && handleClosePopOver(true)
-		}
+		} else handleClosePopOver && handleClosePopOver(true)
 	}
 
 	return (

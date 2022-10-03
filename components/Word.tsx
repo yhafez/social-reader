@@ -24,7 +24,6 @@ const Word = ({
 	const [anchorEl, setAnchorEl] = useState<HTMLSpanElement | null>(null)
 	const [ranges, setRanges] = useState<IBookSelection[]>([])
 	const [selectedRange, setSelectedRange] = useState<IBookSelection | null>(null)
-	const [highlightSelection, setHighlightSelection] = useState(false)
 	const [popOverIsOpen, setPopOverIsOpen] = useState(false)
 
 	useEffect(() => {
@@ -63,7 +62,6 @@ const Word = ({
 			setRanges(ranges => ranges.filter(range => range.id !== selectedRange?.id))
 		}
 		document.querySelectorAll('.highlight').forEach(el => el.classList.remove('selected'))
-		setHighlightSelection(false)
 	}
 
 	const handleHover = (e: MouseEvent, currentlyHovering: boolean) => {
@@ -150,7 +148,6 @@ const Word = ({
 									style={{ m: 0.5 }}
 									iconProps={{ size: 'small', color: 'inherit' }}
 									buttonType="highlight"
-									setHighlightSelection={setHighlightSelection}
 									handleClosePopOver={handleClosePopOver}
 								/>
 								<Box component="span" sx={{ borderRight: 1 }} />
