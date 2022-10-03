@@ -14,6 +14,7 @@ export interface IChapters {
 }
 
 const Home = ({ chapters }: IChapters) => {
+	console.log(chapters)
 	const { isDarkMode, setColorMode } = useContext(ThemeContext)
 	const { setChapters } = useContext(BookViewerContext)
 
