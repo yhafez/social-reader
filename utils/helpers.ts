@@ -11,11 +11,17 @@ export function processHighlightText(
 	highlightColor: string,
 ) {
 	if (startContainer === endContainer || startContainer.children[0] === endContainer) {
-		highlightText(startContainer, highlightColor, key)
+		highlightText(
+			(startContainer?.children[0] as HTMLElement) || startContainer,
+			highlightColor,
+			key,
+		)
 	} else {
 		if (startContainer?.id && endContainer?.id) {
 			if (startContainer.id.includes('container')) {
 				highlightText(startContainer?.children[0] as HTMLElement, highlightColor, key)
+				highlightText(startContainer?.children[1] as HTMLElement, highlightColor, key)
+
 				processHighlightText(
 					startContainer.nextElementSibling as HTMLElement,
 					endContainer,

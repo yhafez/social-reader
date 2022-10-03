@@ -56,6 +56,7 @@ const Word = ({
 			>
 				{word}
 			</span>
+			<span id={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}-space`}> </span>
 		</>
 	)
 }

@@ -78,22 +78,18 @@ const Passage = ({
 						)}
 					</Fragment>
 				) : (
-					<Fragment key={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}`}>
-						<span
-							id={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}-container`}
-							style={{ backgroundColor: isSpeaking ? highlightHoverColor : '' }}
-						>
-							<Word
-								word={word}
-								wordIndex={wordIndex}
-								passageIndex={passageIndex}
-								chapterIndex={chapterIndex}
-							/>
-						</span>
-						<span id={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}-space`}>
-							{' '}
-						</span>
-					</Fragment>
+					<span
+						id={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}-container`}
+						key={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}`}
+						style={{ backgroundColor: isSpeaking ? highlightHoverColor : '' }}
+					>
+						<Word
+							word={word}
+							wordIndex={wordIndex}
+							passageIndex={passageIndex}
+							chapterIndex={chapterIndex}
+						/>
+					</span>
 				),
 			)}
 			<br id={`passage-line-break-${passageIndex}`} />
