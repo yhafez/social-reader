@@ -9,11 +9,13 @@ import { SliderPicker, AlphaPicker } from 'react-color'
 
 const Highlight = ({
 	buttonType,
+	handleClosePopOver,
 	setHighlightSelection,
 	style,
 	iconProps,
 }: {
 	buttonType: 'colorPicker' | 'highlight'
+	handleClosePopOver?: (highlightSelection: boolean) => void
 	setHighlightSelection?: Dispatch<SetStateAction<boolean>>
 	style?: { [key: string]: any }
 	iconProps?: { [key: string]: any }
@@ -34,6 +36,16 @@ const Highlight = ({
 		if (storedHighlightHoverColor) setHighlightHoverColor(storedHighlightHoverColor)
 	}, [setHighlightHoverColor])
 
+	const handleClick = () => {
+		if (buttonType === 'colorPicker') {
+			if (ttsIsOpen) setTtsIsOpen(false)
+			setIsOpen(true)
+		} else {
+			setHighlightSelection && setHighlightSelection(true)
+			handleClosePopOver && handleClosePopOver(true)
+		}
+	}
+
 	return (
 		<>
 			<Tooltip
@@ -51,14 +63,7 @@ const Highlight = ({
 							: 'highlight-selection-button'
 					}
 					color={iconProps?.color ? iconProps.color : isOpen ? 'primary' : 'inherit'}
-					onClick={() => {
-						if (buttonType === 'colorPicker') {
-							if (ttsIsOpen) setTtsIsOpen(false)
-							setIsOpen(true)
-						} else {
-							setHighlightSelection && setHighlightSelection(true)
-						}
-					}}
+					onClick={handleClick}
 					sx={{ ...style }}
 					size={iconProps?.size}
 				>

@@ -48,12 +48,10 @@ const Word = ({
 		})
 	}, [ranges, annotationsAreVisible, highlightColor, selectedRange, highlightHoverColor])
 
-	const handleClosePopOver = () => {
+	const handleClosePopOver = (highlightSelection: boolean) => {
 		setPopOverIsOpen(false)
 		setAnchorEl(null)
-		document.querySelectorAll('.highlight').forEach(el => el.classList.remove('selected'))
 		if (highlightSelection && selectedRange) {
-			setHighlightSelection(false)
 			handleHighlight(
 				selectedRange?.startContainer,
 				selectedRange?.endContainer,
@@ -64,6 +62,8 @@ const Word = ({
 			handleRemoveHighlight(selectedRange?.startContainer, selectedRange?.endContainer)
 			setRanges(ranges => ranges.filter(range => range.id !== selectedRange?.id))
 		}
+		document.querySelectorAll('.highlight').forEach(el => el.classList.remove('selected'))
+		setHighlightSelection(false)
 	}
 
 	const handleHover = (e: MouseEvent, currentlyHovering: boolean) => {
@@ -128,12 +128,12 @@ const Word = ({
 			</span>
 			<span id={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}-space`}> </span>
 			{popOverIsOpen && (
-				<ClickAwayListener onClickAway={handleClosePopOver}>
+				<ClickAwayListener onClickAway={() => handleClosePopOver(false)}>
 					<Popover
 						id={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}-popover`}
 						open={popOverIsOpen}
 						anchorEl={anchorEl}
-						onClose={handleClosePopOver}
+						onClose={() => handleClosePopOver(false)}
 						anchorOrigin={{
 							vertical: 'top',
 							horizontal: 'center',
@@ -151,6 +151,7 @@ const Word = ({
 									iconProps={{ size: 'small', color: 'inherit' }}
 									buttonType="highlight"
 									setHighlightSelection={setHighlightSelection}
+									handleClosePopOver={handleClosePopOver}
 								/>
 								<Box component="span" sx={{ borderRight: 1 }} />
 								<IconButton size="small" color="inherit" sx={{ m: 0.5 }}>
