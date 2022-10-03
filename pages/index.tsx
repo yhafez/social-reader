@@ -19,12 +19,7 @@ const Home = ({ chapters }: IChapters) => {
 
 	useEffect(() => {
 		if (chapters) setChapters(chapters)
-		if (localStorage.getItem('colorMode') === 'dark') {
-			setColorMode('dark')
-		} else if (localStorage.getItem('colorMode') === 'light') {
-			setColorMode('light')
-		}
-	}, [setColorMode, setChapters, chapters])
+	}, [setChapters, chapters])
 
 	return (
 		<Box

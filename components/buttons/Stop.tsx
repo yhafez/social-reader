@@ -5,7 +5,7 @@ import { IconButton, Tooltip } from '@mui/material'
 import { BookViewerContext } from '../../context/BookViewerContext'
 
 const Stop = () => {
-	const { isPlaying, setIsPlaying, speech } = useContext(BookViewerContext)
+	const { setIsPlaying, speech } = useContext(BookViewerContext)
 
 	const handleStop = () => {
 		setIsPlaying(false)

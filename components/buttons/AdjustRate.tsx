@@ -1,20 +1,20 @@
-import { useState, useContext, useRef, Dispatch, SetStateAction } from 'react'
+import { useState, useEffect, useContext, useRef, Dispatch, SetStateAction } from 'react'
 import SpeedIcon from '@mui/icons-material/Speed'
 import { Box, ClickAwayListener, IconButton, Slider, Tooltip } from '@mui/material'
 
 import { ThemeContext } from '../../context/ThemeContext'
 import { BookViewerContext } from '../../context/BookViewerContext'
 
-const AdjustRate = ({
-	rate,
-	setRate,
-}: {
-	rate: number
-	setRate: Dispatch<SetStateAction<number>>
-}) => {
+const AdjustRate = () => {
+	const { rate, setRate } = useContext(BookViewerContext)
 	const { isDarkMode } = useContext(ThemeContext)
 	const [isOpen, setIsOpen] = useState(false)
 	const buttonRef = useRef<HTMLButtonElement>(null)
+
+	useEffect(() => {
+		const storedRate = localStorage.getItem('rate')
+		if (storedRate) setRate(JSON.parse(storedRate))
+	}, [setRate])
 
 	return (
 		<>
@@ -51,6 +51,7 @@ const AdjustRate = ({
 								e.stopPropagation()
 								e.preventDefault()
 								setRate(value as number)
+								localStorage.setItem('rate', JSON.stringify(value as number))
 							}}
 							valueLabelDisplay="auto"
 							max={4}

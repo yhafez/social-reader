@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { SketchPicker } from 'react-color'
 import { Box, ClickAwayListener, IconButton, Tooltip } from '@mui/material'
 import ColorLensIcon from '@mui/icons-material/ColorLens'
@@ -8,6 +8,11 @@ import { ThemeContext } from '../../context/ThemeContext'
 const ThemeColorPicker = () => {
 	const { themeColor, setThemeColor } = useContext(ThemeContext)
 	const [displayThemeColorSelector, setDisplayThemeColorSelector] = useState(false)
+
+	useEffect(() => {
+		const storedThemeColor = localStorage.getItem('themeColor')
+		if (storedThemeColor) setThemeColor(storedThemeColor)
+	}, [setThemeColor])
 
 	return (
 		<>
@@ -29,6 +34,7 @@ const ThemeColorPicker = () => {
 							onChangeComplete={newColor => {
 								const { r, g, b, a = 1 } = newColor.rgb
 								setThemeColor(`rgba(${r},${g},${b},${a})`)
+								localStorage.setItem('themeColor', `rgba(${r},${g},${b},${a})`)
 							}}
 						/>
 					</Box>

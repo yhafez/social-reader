@@ -1,14 +1,11 @@
-import { useState, Dispatch, SetStateAction } from 'react'
+import { useEffect, useContext, useState } from 'react'
 import { IconButton, Menu, MenuItem, Tooltip } from '@mui/material'
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver'
 
-const ChangeVoice = ({
-	voices,
-	setVoice,
-}: {
-	voices: SpeechSynthesisVoice[]
-	setVoice: Dispatch<SetStateAction<SpeechSynthesisVoice | null>>
-}) => {
+import { BookViewerContext } from '../../context/BookViewerContext'
+
+const ChangeVoice = ({ voices }: { voices: SpeechSynthesisVoice[] }) => {
+	const { setVoice } = useContext(BookViewerContext)
 	const [displayVoices, setDisplayVoices] = useState(false)
 	const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
 
@@ -19,8 +16,19 @@ const ChangeVoice = ({
 	const handleClose = (e: React.MouseEvent, voice?: SpeechSynthesisVoice) => {
 		setDisplayVoices(false)
 		setAnchorEl(null)
-		if (voice) setVoice(voice)
+		if (voice) {
+			setVoice(voice)
+			localStorage.setItem(
+				'voice',
+				JSON.stringify(JSON.stringify({ name: voice.name, lang: voice.lang })),
+			)
+		}
 	}
+
+	useEffect(() => {
+		const storedVoice = localStorage.getItem('voice')
+		if (storedVoice) setVoice(JSON.parse(storedVoice))
+	}, [setVoice])
 
 	return (
 		<>

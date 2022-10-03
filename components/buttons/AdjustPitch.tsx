@@ -1,20 +1,20 @@
-import { useState, useContext, useRef, Dispatch, SetStateAction } from 'react'
+import { useState, useEffect, useContext, useRef } from 'react'
 import GraphicEqIcon from '@mui/icons-material/GraphicEq'
 import { Box, ClickAwayListener, IconButton, Slider, Tooltip } from '@mui/material'
 
 import { ThemeContext } from '../../context/ThemeContext'
 import { BookViewerContext } from '../../context/BookViewerContext'
 
-const AdjustPitch = ({
-	pitch,
-	setPitch,
-}: {
-	pitch: number
-	setPitch: Dispatch<SetStateAction<number>>
-}) => {
+const AdjustPitch = () => {
+	const { pitch, setPitch } = useContext(BookViewerContext)
 	const { isDarkMode } = useContext(ThemeContext)
 	const [isOpen, setIsOpen] = useState(false)
 	const buttonRef = useRef<HTMLButtonElement>(null)
+
+	useEffect(() => {
+		const storedPitch = localStorage.getItem('pitch')
+		if (storedPitch) setPitch(JSON.parse(storedPitch))
+	}, [setPitch])
 
 	return (
 		<>
@@ -51,6 +51,7 @@ const AdjustPitch = ({
 								e.stopPropagation()
 								e.preventDefault()
 								setPitch(value as number)
+								localStorage.setItem('pitch', JSON.stringify(value as number))
 							}}
 							valueLabelDisplay="auto"
 							max={2}

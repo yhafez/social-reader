@@ -1,20 +1,21 @@
-import { useState, useContext, useRef, Dispatch, SetStateAction } from 'react'
+import { useState, useEffect, useContext, useRef, Dispatch, SetStateAction } from 'react'
 import VolumeUpIcon from '@mui/icons-material/VolumeUp'
 import VolumeOffIcon from '@mui/icons-material/VolumeOff'
 import { Box, ClickAwayListener, IconButton, Slider, Tooltip } from '@mui/material'
 
 import { ThemeContext } from '../../context/ThemeContext'
+import { BookViewerContext } from '../../context/BookViewerContext'
 
-const AdjustVolume = ({
-	volume,
-	setVolume,
-}: {
-	volume: number
-	setVolume: Dispatch<SetStateAction<number>>
-}) => {
+const AdjustVolume = () => {
+	const { volume, setVolume } = useContext(BookViewerContext)
 	const { isDarkMode } = useContext(ThemeContext)
 	const [isOpen, setIsOpen] = useState(false)
 	const buttonRef = useRef<HTMLButtonElement>(null)
+
+	useEffect(() => {
+		const storedVolume = localStorage.getItem('volume')
+		if (storedVolume) setVolume(JSON.parse(storedVolume))
+	}, [setVolume])
 
 	return (
 		<>
@@ -54,6 +55,7 @@ const AdjustVolume = ({
 								e.stopPropagation()
 								e.preventDefault()
 								setVolume((value as number) / 100)
+								localStorage.setItem('volume', JSON.stringify((value as number) / 100))
 							}}
 							valueLabelDisplay="auto"
 							max={100}

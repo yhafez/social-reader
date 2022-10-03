@@ -26,13 +26,9 @@ export interface ISpeechData {
 
 const TTSController = ({ setIsOpen }: { setIsOpen: Dispatch<SetStateAction<boolean>> }) => {
 	const { isDarkMode } = useContext(ThemeContext)
-	const { setSpeech } = useContext(BookViewerContext)
+	const { setSpeech, volume, rate, pitch, voice } = useContext(BookViewerContext)
 
-	const [volume, setVolume] = useState(1)
-	const [rate, setRate] = useState(1)
-	const [pitch, setPitch] = useState(1)
 	const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
-	const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null)
 
 	useEffect(() => {
 		const speech = new Speech()
@@ -70,10 +66,10 @@ const TTSController = ({ setIsOpen }: { setIsOpen: Dispatch<SetStateAction<boole
 			}}
 		>
 			<ToggleHighlightSpeech />
-			<ChangeVoice voices={voices} setVoice={setVoice} />
-			<AdjustPitch pitch={pitch} setPitch={setPitch} />
-			<AdjustVolume volume={volume} setVolume={setVolume} />
-			<AdjustRate rate={rate} setRate={setRate} />
+			<ChangeVoice voices={voices} />
+			<AdjustPitch />
+			<AdjustVolume />
+			<AdjustRate />
 			<PlayPause />
 			<Stop />
 			<Close name="tts-controller" setIsOpen={setIsOpen} />

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useEffect, useContext, useState } from 'react'
 import { Box, ClickAwayListener, IconButton, Tooltip } from '@mui/material'
 import BorderColorIcon from '@mui/icons-material/BorderColor'
 import { useTheme } from '@mui/material/styles'
@@ -13,6 +13,16 @@ const HighlightColorPicker = () => {
 	const [displayHighlightColorSelector, setDisplayHighlightColorSelector] = useState(false)
 	const { highlightColor, setHighlightColor, setHighlightHoverColor } =
 		useContext(BookViewerContext)
+
+	useEffect(() => {
+		const storedHighlightColor = localStorage.getItem('highlightColor')
+		if (storedHighlightColor) setHighlightColor(storedHighlightColor)
+	}, [setHighlightColor])
+
+	useEffect(() => {
+		const storedHighlightHoverColor = localStorage.getItem('highlightHoverColor')
+		if (storedHighlightHoverColor) setHighlightHoverColor(storedHighlightHoverColor)
+	}, [setHighlightHoverColor])
 
 	return (
 		<>
@@ -34,6 +44,11 @@ const HighlightColorPicker = () => {
 								const { r, g, b, a = 1 } = newColor.rgb
 								setHighlightColor(`rgba(${r},${g},${b},${a})`)
 								setHighlightHoverColor(`rgba(${r + 50},${g + 50},${b + 50},${a})`)
+								localStorage.setItem('highlightColor', `rgba(${r},${g},${b},${a})`)
+								localStorage.setItem(
+									'highlightHoverColor',
+									`rgba(${r + 50},${g + 50},${b + 50},${a})`,
+								)
 							}}
 							width={`${matches ? '250px' : '200px'}`}
 						/>

@@ -23,11 +23,23 @@ const Passage = ({
 		setIsPlaying,
 		highlightHoverColor,
 		highlightSpeech,
+		volume,
+		rate,
+		pitch,
+		voice,
 	} = useContext(BookViewerContext)
 	const [isSpeaking, setIsSpeaking] = useState(false)
 
 	useEffect(() => {
 		if (isPlaying) {
+			speech.init({
+				volume,
+				rate,
+				pitch,
+				voice: voice?.name,
+				lang: voice?.lang,
+				splitSentences: true,
+			})
 			speech.speak({
 				text: passage?.replaceAll(/@([\w\W]+?)@/g, ''),
 				queue: true,
@@ -49,7 +61,7 @@ const Passage = ({
 				},
 			})
 		}
-	}, [speech, setIsPlaying, isPlaying, passage])
+	}, [speech, setIsPlaying, isPlaying, passage, pitch, rate, volume, voice])
 
 	return (
 		<Fragment>
@@ -91,7 +103,8 @@ const Passage = ({
 						key={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}`}
 						style={{
 							borderRadius: '2px',
-							backgroundColor: isSpeaking && highlightSpeech ? highlightHoverColor : '',
+							backgroundColor:
+								isSpeaking && isPlaying && highlightSpeech ? highlightHoverColor : '',
 						}}
 					>
 						<Word

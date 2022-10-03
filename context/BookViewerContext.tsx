@@ -24,6 +24,14 @@ export interface IBookViewerState {
 	setSpeech: Dispatch<SetStateAction<any | null>>
 	highlightSpeech: boolean
 	setHighlightSpeech: Dispatch<SetStateAction<boolean>>
+	pitch: number
+	setPitch: Dispatch<SetStateAction<number>>
+	rate: number
+	setRate: Dispatch<SetStateAction<number>>
+	volume: number
+	setVolume: Dispatch<SetStateAction<number>>
+	voice: SpeechSynthesisVoice | null
+	setVoice: Dispatch<SetStateAction<SpeechSynthesisVoice | null>>
 }
 
 export const BookViewerContext = createContext<IBookViewerState>({
@@ -49,6 +57,14 @@ export const BookViewerContext = createContext<IBookViewerState>({
 	setIsPlaying: () => null,
 	highlightSpeech: true,
 	setHighlightSpeech: () => null,
+	pitch: 1,
+	setPitch: () => null,
+	rate: 1,
+	setRate: () => null,
+	volume: 1,
+	setVolume: () => null,
+	voice: null,
+	setVoice: () => null,
 })
 
 const BookViewerProvider = ({ children }: { children: ReactNode }) => {
@@ -63,6 +79,10 @@ const BookViewerProvider = ({ children }: { children: ReactNode }) => {
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [speech, setSpeech] = useState<any | null>(null)
 	const [highlightSpeech, setHighlightSpeech] = useState(true)
+	const [pitch, setPitch] = useState(1)
+	const [rate, setRate] = useState(1)
+	const [volume, setVolume] = useState(1)
+	const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null)
 
 	return (
 		<BookViewerContext.Provider
@@ -89,6 +109,14 @@ const BookViewerProvider = ({ children }: { children: ReactNode }) => {
 				setSpeech,
 				highlightSpeech,
 				setHighlightSpeech,
+				pitch,
+				setPitch,
+				rate,
+				setRate,
+				volume,
+				setVolume,
+				voice,
+				setVoice,
 			}}
 		>
 			{children}

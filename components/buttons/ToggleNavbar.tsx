@@ -16,12 +16,19 @@ const ToggleNavbar = () => {
 		}
 	}, [matches, setNavIsExpanded])
 
+	useEffect(() => {
+		const storedNavIsExpanded = localStorage.getItem('navIsExpanded')
+		if (storedNavIsExpanded) setNavIsExpanded(storedNavIsExpanded === 'true')
+	}, [setNavIsExpanded])
 	return (
 		<Tooltip id="navbar-toggle-tooltip" title="Toggle navbar">
 			<IconButton
 				id="expand-button"
 				color="inherit"
-				onClick={() => setNavIsExpanded(navExpanded => !navExpanded)}
+				onClick={() => {
+					setNavIsExpanded(navExpanded => !navExpanded)
+					localStorage.setItem('navIsExpanded', JSON.stringify(!navIsExpanded))
+				}}
 			>
 				{navIsExpanded ? (
 					<ArrowDropUpIcon id="retract-icon" fontSize="large" />
