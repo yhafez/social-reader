@@ -10,6 +10,7 @@ import ToggleImages from './buttons/ToggleImages'
 
 import { ThemeContext } from '../context/ThemeContext'
 import ToggleTextToSpeech from './buttons/ToggleTextToSpeech'
+import ResetSettings from './buttons/ResetSettings'
 
 const BookActionBar = () => {
 	const { themeColor } = useContext(ThemeContext)
@@ -49,6 +50,7 @@ const BookActionBar = () => {
 					<ToggleImages />
 					<HighlightColorPicker />
 					<ThemeColorPicker />
+					<ResetSettings />
 				</Box>
 			</Box>
 		</>
