@@ -10,7 +10,7 @@ import AdjustRate from './buttons/AdjustRate'
 import ToggleHighlightSpeech from './buttons/ToggleHighlightSpeech'
 import { ThemeContext } from '../context/ThemeContext'
 import { BookViewerContext } from '../context/BookViewerContext'
-import Play from './buttons/Play'
+import Play from './buttons/PlayPause'
 
 export interface ISpeechData {
 	browserSupport: boolean

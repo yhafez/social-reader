@@ -36,6 +36,10 @@ const Passage = ({
 						setIsPlaying(true)
 						setIsSpeaking(true)
 					},
+					onresume: () => {
+						setIsPlaying(true)
+						setIsSpeaking(true)
+					},
 					onend: () => {
 						setIsSpeaking(false)
 						setIsPlaying(false)
@@ -87,7 +91,10 @@ const Passage = ({
 					<span
 						id={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}-container`}
 						key={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}`}
-						style={{ backgroundColor: isSpeaking && highlightSpeech ? highlightHoverColor : '' }}
+						style={{
+							borderRadius: '2px',
+							backgroundColor: isSpeaking && highlightSpeech ? highlightHoverColor : '',
+						}}
 					>
 						<Word
 							word={word}
