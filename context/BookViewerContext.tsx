@@ -1,6 +1,5 @@
 import { createContext, useState, Dispatch, SetStateAction, ReactNode } from 'react'
 import { IParsedChapter } from '../pages/api/epub'
-
 export interface IBookViewerState {
 	annotationsAreVisible: boolean
 	setAnnotationsAreVisible: Dispatch<SetStateAction<boolean>>
@@ -34,6 +33,10 @@ export interface IBookViewerState {
 	setVoice: Dispatch<SetStateAction<SpeechSynthesisVoice | null>>
 	ttsIsOpen: boolean
 	setTtsIsOpen: Dispatch<SetStateAction<boolean>>
+	passages: string[]
+	setPassages: Dispatch<SetStateAction<string[]>>
+	passageBeingRead: number
+	setPassageBeingRead: Dispatch<SetStateAction<number>>
 }
 
 export const BookViewerContext = createContext<IBookViewerState>({
@@ -69,6 +72,10 @@ export const BookViewerContext = createContext<IBookViewerState>({
 	setVoice: () => null,
 	ttsIsOpen: false,
 	setTtsIsOpen: () => null,
+	passages: [],
+	setPassages: () => null,
+	passageBeingRead: 0,
+	setPassageBeingRead: () => null,
 })
 
 const BookViewerProvider = ({ children }: { children: ReactNode }) => {
@@ -88,6 +95,8 @@ const BookViewerProvider = ({ children }: { children: ReactNode }) => {
 	const [volume, setVolume] = useState(1)
 	const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null)
 	const [ttsIsOpen, setTtsIsOpen] = useState(false)
+	const [passages, setPassages] = useState<string[]>([])
+	const [passageBeingRead, setPassageBeingRead] = useState(0)
 
 	return (
 		<BookViewerContext.Provider
@@ -124,6 +133,10 @@ const BookViewerProvider = ({ children }: { children: ReactNode }) => {
 				setVoice,
 				ttsIsOpen,
 				setTtsIsOpen,
+				passages,
+				setPassages,
+				passageBeingRead,
+				setPassageBeingRead,
 			}}
 		>
 			{children}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, Fragment, MouseEvent } from 'react'
+import { useEffect, useContext, Fragment } from 'react'
 import { Box } from '@mui/material'
 import Image from 'next/future/image'
 
@@ -19,50 +19,16 @@ const Passage = ({
 }) => {
 	const {
 		imagesAreVisible,
-		speech,
-		isPlaying,
-		setIsPlaying,
 		highlightHoverColor,
 		highlightSpeech,
-		volume,
-		rate,
-		pitch,
-		voice,
+		passages,
+		isPlaying,
+		passageBeingRead,
 	} = useContext(BookViewerContext)
-	const [isSpeaking, setIsSpeaking] = useState(false)
 
 	useEffect(() => {
-		if (isPlaying) {
-			speech.init({
-				volume,
-				rate,
-				pitch,
-				voice: voice?.name,
-				lang: voice?.lang,
-				splitSentences: true,
-			})
-			speech.speak({
-				text: passage?.replaceAll(/@([\w\W]+?)@/g, ''),
-				queue: true,
-				listeners: {
-					onstart: () => {
-						setIsPlaying(true)
-						setIsSpeaking(true)
-					},
-					onresume: () => {
-						setIsSpeaking(true)
-					},
-					onend: () => {
-						setIsSpeaking(false)
-						setIsPlaying(false)
-					},
-					onpause: () => {
-						setIsSpeaking(false)
-					},
-				},
-			})
-		}
-	}, [speech, setIsPlaying, isPlaying, passage, pitch, rate, volume, voice])
+		if (!passages[passageIndex]) passages[passageIndex] = passage
+	}, [passage, passageIndex, passages])
 
 	return (
 		<Fragment>
@@ -105,7 +71,9 @@ const Passage = ({
 							style={{
 								borderRadius: '2px',
 								backgroundColor:
-									isSpeaking && isPlaying && highlightSpeech ? highlightHoverColor : '',
+									isPlaying && highlightSpeech && passageBeingRead === passageIndex
+										? highlightHoverColor
+										: '',
 							}}
 						>
 							<Word

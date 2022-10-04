@@ -1,12 +1,13 @@
-import { useState, useEffect, useContext, MouseEvent } from 'react'
+import { useState, useEffect, useContext, MouseEvent, Dispatch, SetStateAction } from 'react'
 import { Box, ClickAwayListener, IconButton, Popover } from '@mui/material'
 import CommentIcon from '@mui/icons-material/Comment'
 import CampaignIcon from '@mui/icons-material/Campaign'
 
 import { BookViewerContext } from '../context/BookViewerContext'
-import { handleHighlight, handleRemoveHighlight } from '../utils/helpers'
+import { handleHighlight, handleRemoveHighlight, readUtterance } from '../utils/helpers'
 import Highlight from './buttons/Highlight'
 import { IBookSelection } from './ChapterView'
+import ToggleTextToSpeech from './buttons/ToggleTextToSpeech'
 
 const Word = ({
 	chapterIndex,
@@ -19,8 +20,20 @@ const Word = ({
 	wordIndex: number
 	word: string
 }) => {
-	const { fontSize, highlightColor, highlightHoverColor, annotationsAreVisible } =
-		useContext(BookViewerContext)
+	const {
+		fontSize,
+		highlightColor,
+		highlightHoverColor,
+		annotationsAreVisible,
+		speech,
+		setIsPlaying,
+		passages,
+		volume,
+		rate,
+		pitch,
+		voice,
+		setPassageBeingRead,
+	} = useContext(BookViewerContext)
 	const [anchorEl, setAnchorEl] = useState<HTMLSpanElement | null>(null)
 	const [ranges, setRanges] = useState<IBookSelection[]>([])
 	const [selectedRange, setSelectedRange] = useState<IBookSelection | null>(null)
@@ -157,9 +170,11 @@ const Word = ({
 								<Box component="span" sx={{ borderRight: 1 }} />
 							</>
 						)}
-						<IconButton color="inherit" size="small" sx={{ m: 0.5 }}>
-							<CampaignIcon />
-						</IconButton>
+						<ToggleTextToSpeech
+							buttonType="read"
+							iconProps={{ color: 'inherit', size: 'small' }}
+							style={{ m: 0.5 }}
+						/>
 					</Popover>
 				</ClickAwayListener>
 			)}

@@ -1,3 +1,72 @@
+import { Dispatch, SetStateAction } from 'react'
+
+export function readUtterance(
+	volume: number,
+	rate: number,
+	pitch: number,
+	voice: SpeechSynthesisVoice | null,
+	speech: any,
+	passages: string[],
+	passageIndex: number,
+	setIsPlaying: Dispatch<SetStateAction<boolean>>,
+	setPassageBeingRead: Dispatch<SetStateAction<number>>,
+	firstWordIndex?: number,
+) {
+	speech.init({
+		volume,
+		rate,
+		pitch,
+		voice: voice?.name,
+		lang: voice?.lang,
+		splitSentences: true,
+	})
+	if (passageIndex > passages.length) return
+	if (!passages[passageIndex]) {
+		readUtterance(
+			volume,
+			rate,
+			pitch,
+			voice,
+			speech,
+			passages,
+			passageIndex + 1,
+			setIsPlaying,
+			setPassageBeingRead,
+		)
+	} else {
+		speech.speak({
+			text: firstWordIndex
+				? passages[passageIndex]
+						?.split(/\s+/g)
+						.slice(+firstWordIndex)
+						.join(' ')
+						.replaceAll(/@([\w\W]+?)@/g, '')
+				: passages[passageIndex]?.replaceAll(/@([\w\W]+?)@/g, ''),
+			queue: firstWordIndex ? false : true,
+			listeners: {
+				onstart: () => {
+					setPassageBeingRead(passageIndex)
+					setIsPlaying(true)
+				},
+				onend: () => {
+					setIsPlaying(false)
+				},
+			},
+		})
+		readUtterance(
+			volume,
+			rate,
+			pitch,
+			voice,
+			speech,
+			passages,
+			+passageIndex + 1,
+			setIsPlaying,
+			setPassageBeingRead,
+		)
+	}
+}
+
 export function handleHighlight(
 	startContainer: Node,
 	endContainer: Node,

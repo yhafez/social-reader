@@ -43,7 +43,7 @@ const BookActionBar = () => {
 					width="100%"
 					mr={1}
 				>
-					<ToggleTextToSpeech />
+					<ToggleTextToSpeech buttonType="toggle" />
 					<ChangeFont increase />
 					<ChangeFont />
 					<ToggleAnnotations />

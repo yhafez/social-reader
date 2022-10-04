@@ -4,13 +4,34 @@ import PauseIcon from '@mui/icons-material/Pause'
 import { IconButton, Tooltip } from '@mui/material'
 
 import { BookViewerContext } from '../../context/BookViewerContext'
+import { readUtterance } from '../../utils/helpers'
 
 const PlayPause = () => {
-	const { isPlaying, setIsPlaying, speech } = useContext(BookViewerContext)
+	const {
+		isPlaying,
+		setIsPlaying,
+		speech,
+		volume,
+		rate,
+		pitch,
+		voice,
+		passages,
+		setPassageBeingRead,
+	} = useContext(BookViewerContext)
 
 	const handlePlay = () => {
 		if (speech.speaking()) speech.resume()
-		setIsPlaying(true)
+		readUtterance(
+			volume,
+			rate,
+			pitch,
+			voice,
+			speech,
+			passages,
+			0,
+			setIsPlaying,
+			setPassageBeingRead,
+		)
 	}
 
 	const handlePause = () => {
