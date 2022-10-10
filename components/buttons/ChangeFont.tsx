@@ -1,12 +1,12 @@
-import { useEffect, useContext } from 'react'
+import { useEffect } from 'react'
 import { IconButton, Tooltip } from '@mui/material'
 import TextIncreaseIcon from '@mui/icons-material/TextIncrease'
 import TextDecreaseIcon from '@mui/icons-material/TextDecrease'
 
-import { BookViewerContext } from '../../context/BookViewerContext'
+import useBoundStore from '../../store'
 
 const ChangeFont = ({ increase }: { increase?: boolean }) => {
-	const { fontSize, setFontSize } = useContext(BookViewerContext)
+	const { fontSize, setFontSize, increaseFontSize, decreaseFontSize } = useBoundStore()
 
 	useEffect(() => {
 		const storedFontSize = localStorage.getItem('fontSize')
@@ -21,9 +21,9 @@ const ChangeFont = ({ increase }: { increase?: boolean }) => {
 			<IconButton
 				id={`${increase ? 'increase' : 'decrease'}-font-size-button`}
 				color="inherit"
-				disabled={increase ? fontSize >= 4 : fontSize <= 0.5}
+				disabled={increase ? fontSize >= 48 : fontSize <= 8}
 				onClick={() => {
-					setFontSize(fontSize => (increase ? fontSize * 1.1 : fontSize / 1.1))
+					increase ? increaseFontSize() : decreaseFontSize()
 					localStorage.setItem('fontSize', JSON.stringify(fontSize))
 				}}
 			>

@@ -1,14 +1,16 @@
-import { useState, useEffect, useContext, useRef, Dispatch, SetStateAction } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import VolumeUpIcon from '@mui/icons-material/VolumeUp'
 import VolumeOffIcon from '@mui/icons-material/VolumeOff'
 import { Box, ClickAwayListener, IconButton, Slider, Tooltip } from '@mui/material'
 
-import { ThemeContext } from '../../context/ThemeContext'
-import { BookViewerContext } from '../../context/BookViewerContext'
+import useBoundStore from '../../store'
 
 const AdjustVolume = () => {
-	const { volume, setVolume } = useContext(BookViewerContext)
-	const { isDarkMode } = useContext(ThemeContext)
+	const {
+		volume,
+		setVolume,
+		computed: { isDarkMode },
+	} = useBoundStore()
 	const [isOpen, setIsOpen] = useState(false)
 	const buttonRef = useRef<HTMLButtonElement>(null)
 

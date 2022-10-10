@@ -1,13 +1,17 @@
-import { useContext } from 'react'
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
 import { IconButton, Tooltip } from '@mui/material'
 
-import { BookViewerContext } from '../../context/BookViewerContext'
+import useBoundStore from '../../store'
 
 const Stop = () => {
-	// const {} = useContext(BookViewerContext)
+	const { resetTheme, resetBookViewer, resetSidebar, resetSr, resetTts } = useBoundStore()
 
 	const handleResetSettings = () => {
+		resetTheme()
+		resetBookViewer()
+		resetSidebar()
+		resetSr()
+		resetTts()
 		localStorage.removeItem('pitch')
 		localStorage.removeItem('rate')
 		localStorage.removeItem('volume')

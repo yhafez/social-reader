@@ -1,13 +1,16 @@
-import { useState, useEffect, useContext, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import GraphicEqIcon from '@mui/icons-material/GraphicEq'
 import { Box, ClickAwayListener, IconButton, Slider, Tooltip } from '@mui/material'
 
-import { ThemeContext } from '../../context/ThemeContext'
-import { BookViewerContext } from '../../context/BookViewerContext'
+import useBoundStore from '../../store'
 
 const AdjustPitch = () => {
-	const { pitch, setPitch } = useContext(BookViewerContext)
-	const { isDarkMode } = useContext(ThemeContext)
+	const {
+		pitch,
+		setPitch,
+		computed: { isDarkMode },
+	} = useBoundStore()
+
 	const [isOpen, setIsOpen] = useState(false)
 	const buttonRef = useRef<HTMLButtonElement>(null)
 

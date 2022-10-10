@@ -1,15 +1,14 @@
-import { useContext } from 'react'
 import StopIcon from '@mui/icons-material/Stop'
 import { IconButton, Tooltip } from '@mui/material'
 
-import { BookViewerContext } from '../../context/BookViewerContext'
+import useBoundStore from '../../store'
 
 const Stop = () => {
-	const { setIsPlaying, speech } = useContext(BookViewerContext)
+	const { setTtsIsPlaying, speech } = useBoundStore()
 
 	const handleStop = () => {
-		setIsPlaying(false)
-		speech.cancel()
+		setTtsIsPlaying(false)
+		speech?.cancel()
 	}
 
 	return (

@@ -1,23 +1,30 @@
-import { useEffect, useContext } from 'react'
+import { useEffect } from 'react'
 import { Box } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
+import useBoundStore from '../store'
 import ChapterView from './ChapterView'
 import BookNav from './BookNav'
-import { BookViewerContext } from '../context/BookViewerContext'
 
 const BookViewer = () => {
 	const theme = useTheme()
 	const matches = useMediaQuery(theme.breakpoints.down('sm'))
-	const { navIsExpanded, chapters, chapter, setChapter } = useContext(BookViewerContext)
+	const {
+		navIsExpanded,
+		setChapter,
+		computed: { chapters, chapterIndex },
+	} = useBoundStore()
 
 	useEffect(() => {
-		const chapter = localStorage.getItem('currentChapter')
-		if (chapter) {
-			setChapter(JSON.parse(chapter))
-		}
-	}, [setChapter])
+		if (localStorage.getItem('chapterIndex'))
+			setChapter(chapters[parseInt(localStorage.getItem('chapterIndex') || '0')])
+		else setChapter(chapters && chapters[0])
+	}, [chapters, setChapter])
+
+	useEffect(() => {
+		if (chapterIndex !== null) localStorage.setItem('chapterIndex', chapterIndex.toString())
+	}, [chapters, chapterIndex])
 
 	return (
 		<Box
@@ -34,9 +41,9 @@ const BookViewer = () => {
 			alignItems="center"
 			flexDirection={matches ? 'column' : 'row'}
 		>
-			{!matches && <BookNav side="left" epubLength={chapters.length || 0} />}
+			{!matches && <BookNav side="left" epubLength={chapters?.length || 0} />}
 			{<ChapterView />}
-			{!matches && <BookNav side="right" epubLength={chapters.length || 0} />}
+			{!matches && <BookNav side="right" epubLength={chapters?.length || 0} />}
 			{matches && (
 				<Box
 					id="book-nav-button-container"
@@ -44,8 +51,8 @@ const BookViewer = () => {
 					justifyContent="space-evenly"
 					width="100%"
 				>
-					<BookNav side="left" epubLength={chapters.length || 0} />
-					<BookNav side="right" epubLength={chapters.length || 0} />
+					<BookNav side="left" epubLength={chapters?.length || 0} />
+					<BookNav side="right" epubLength={chapters?.length || 0} />
 				</Box>
 			)}
 		</Box>

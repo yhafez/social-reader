@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react'
+import { IPassage } from '../@types'
 
 export function readUtterance(
 	volume: number,
@@ -6,13 +6,13 @@ export function readUtterance(
 	pitch: number,
 	voice: SpeechSynthesisVoice | null,
 	speech: any,
-	passages: string[],
+	passages: IPassage[],
 	passageIndex: number,
-	setIsPlaying: Dispatch<SetStateAction<boolean>>,
-	setPassageBeingRead: Dispatch<SetStateAction<number>>,
+	setTtsIsPlaying: (ttsIsPlaying: boolean) => void,
+	setTtsPassageBeingRead: (ttsPassageBeingRead: IPassage) => void,
 	firstWordIndex?: number,
 ) {
-	speech.init({
+	speech?.init({
 		volume,
 		rate,
 		pitch,
@@ -30,26 +30,26 @@ export function readUtterance(
 			speech,
 			passages,
 			passageIndex + 1,
-			setIsPlaying,
-			setPassageBeingRead,
+			setTtsIsPlaying,
+			setTtsPassageBeingRead,
 		)
 	} else {
 		speech.speak({
 			text: firstWordIndex
-				? passages[passageIndex]
+				? passages[passageIndex].content
 						?.split(/\s+/g)
 						.slice(+firstWordIndex)
 						.join(' ')
 						.replaceAll(/@([\w\W]+?)@/g, '')
-				: passages[passageIndex]?.replaceAll(/@([\w\W]+?)@/g, ''),
+				: passages[passageIndex].content.replaceAll(/@([\w\W]+?)@/g, ''),
 			queue: firstWordIndex ? false : true,
 			listeners: {
 				onstart: () => {
-					setPassageBeingRead(passageIndex)
-					setIsPlaying(true)
+					setTtsPassageBeingRead(passages[passageIndex])
+					setTtsIsPlaying(true)
 				},
 				onend: () => {
-					setIsPlaying(false)
+					setTtsIsPlaying(false)
 				},
 			},
 		})
@@ -61,8 +61,8 @@ export function readUtterance(
 			speech,
 			passages,
 			+passageIndex + 1,
-			setIsPlaying,
-			setPassageBeingRead,
+			setTtsIsPlaying,
+			setTtsPassageBeingRead,
 		)
 	}
 }
@@ -83,17 +83,25 @@ export function handleHighlight(
 		const key = `${startContainer.parentElement.id}-to-${endContainer.parentElement.id} ${
 			isSelected ? 'selected' : ''
 		}`
-		if (annotationsAreVisible)
+		if (annotationsAreVisible) {
 			processHighlightText(
 				startContainer.parentElement,
 				endContainer.parentElement,
 				key,
 				highlightColor,
 			)
-		else
-			(document.querySelectorAll(`.${key}`) as NodeListOf<HTMLElement>).forEach(
-				element => (element.style.backgroundColor = 'transparent'),
-			)
+		} else
+			(document.querySelectorAll(`.${key}`) as NodeListOf<HTMLElement>).forEach(element => {
+				element.style.backgroundColor = 'transparent'
+				element.style.color = 'inherit'
+
+				element.classList.remove(key)
+				element.classList.remove('selected')
+				element.classList.remove('highlight')
+
+				if (element.classList.length === 0) element.removeAttribute('class')
+				if (element.style.cssText === '') element.removeAttribute('style')
+			})
 	}
 }
 

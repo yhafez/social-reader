@@ -1,11 +1,11 @@
-import { useEffect, useContext } from 'react'
+import { useEffect } from 'react'
 import { IconButton, Tooltip } from '@mui/material'
 import CampaignIcon from '@mui/icons-material/Campaign'
 
+import useBoundStore from '../../store'
 import TTSController from '../TTSController'
-import { BookViewerContext } from '../../context/BookViewerContext'
-import { IBookSelection } from '../ChapterView'
 import { readUtterance } from '../../utils/helpers'
+import { IBookSelection } from '../../@types'
 
 const ToggleTextToSpeech = ({
 	buttonType,
@@ -24,10 +24,10 @@ const ToggleTextToSpeech = ({
 		volume,
 		voice,
 		speech,
-		passages,
-		setIsPlaying,
-		setPassageBeingRead,
-	} = useContext(BookViewerContext)
+		setTtsIsPlaying,
+		setTtsPassageBeingRead,
+		computed: { passages },
+	} = useBoundStore()
 
 	useEffect(() => {
 		const storedTTSIsOpen = localStorage.getItem('ttsIsOpen')
@@ -37,7 +37,8 @@ const ToggleTextToSpeech = ({
 	const handleClick = () => {
 		if (buttonType === 'toggle') {
 			localStorage.setItem('ttsIsOpen', JSON.stringify(!ttsIsOpen))
-			setTtsIsOpen(open => !open)
+			if (ttsIsOpen) setTtsIsOpen(!open)
+			else setTtsIsOpen(!ttsIsOpen)
 		} else {
 			const selObj = window.getSelection()
 			const range = selObj?.getRangeAt(0) as IBookSelection
@@ -56,10 +57,10 @@ const ToggleTextToSpeech = ({
 				pitch,
 				voice,
 				speech,
-				passages,
+				passages && passages.length > 0 ? passages : [],
 				+firstPassageIndex,
-				setIsPlaying,
-				setPassageBeingRead,
+				setTtsIsPlaying,
+				setTtsPassageBeingRead,
 				+firstWordIndex,
 			)
 		}
@@ -77,7 +78,7 @@ const ToggleTextToSpeech = ({
 					<CampaignIcon id="voices-icon" sx={{ cursor: 'pointer' }} />
 				</IconButton>
 			</Tooltip>
-			{ttsIsOpen && <TTSController setIsOpen={setTtsIsOpen} />}
+			{ttsIsOpen && <TTSController />}
 		</>
 	)
 }

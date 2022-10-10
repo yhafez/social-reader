@@ -1,11 +1,11 @@
-import { useEffect, useContext, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { IconButton, Menu, MenuItem, Tooltip } from '@mui/material'
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver'
 
-import { BookViewerContext } from '../../context/BookViewerContext'
+import useBoundStore from '../../store'
 
 const ChangeVoice = ({ voices }: { voices: SpeechSynthesisVoice[] }) => {
-	const { setVoice } = useContext(BookViewerContext)
+	const { setVoice } = useBoundStore()
 	const [displayVoices, setDisplayVoices] = useState(false)
 	const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
 

@@ -24,7 +24,7 @@
 		"**/*.tsx",
 		"jest.config.ts",
 		"api/index.js",
-		"config/jest/__mocks__/chapters.js"
+		"config/jest/__mocks__/book.js"
 	],
 	"exclude": ["node_modules", "config"],
 	"references": [

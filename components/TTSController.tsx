@@ -1,15 +1,14 @@
-import { useState, useEffect, useContext, Dispatch, SetStateAction } from 'react'
+import { useEffect } from 'react'
 import { Box } from '@mui/material'
 import Speech from 'speak-tts'
 
+import useBoundStore from '../store'
 import Close from './buttons/Close'
 import ChangeVoice from './buttons/ChangeVoice'
 import AdjustPitch from './buttons/AdjustPitch'
 import AdjustVolume from './buttons/AdjustVolume'
 import AdjustRate from './buttons/AdjustRate'
 import ToggleHighlightSpeech from './buttons/ToggleHighlightSpeech'
-import { ThemeContext } from '../context/ThemeContext'
-import { BookViewerContext } from '../context/BookViewerContext'
 import PlayPause from './buttons/PlayPause'
 import Stop from './buttons/Stop'
 
@@ -24,11 +23,18 @@ export interface ISpeechData {
 	volume: number
 }
 
-const TTSController = ({ setIsOpen }: { setIsOpen: Dispatch<SetStateAction<boolean>> }) => {
-	const { isDarkMode } = useContext(ThemeContext)
-	const { setSpeech, volume, rate, pitch, voice } = useContext(BookViewerContext)
-
-	const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
+const TTSController = () => {
+	const {
+		setSpeech,
+		volume,
+		rate,
+		pitch,
+		voice,
+		voices,
+		setVoices,
+		setTtsIsOpen,
+		computed: { isDarkMode },
+	} = useBoundStore()
 
 	useEffect(() => {
 		const speech = new Speech()
@@ -72,7 +78,7 @@ const TTSController = ({ setIsOpen }: { setIsOpen: Dispatch<SetStateAction<boole
 			<AdjustRate />
 			<PlayPause />
 			<Stop />
-			<Close name="tts-controller" setIsOpen={setIsOpen} />
+			<Close name="tts-controller" setIsOpen={setTtsIsOpen} />
 		</Box>
 	)
 }

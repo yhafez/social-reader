@@ -5,17 +5,7 @@ import path from 'path'
 import fs from 'fs'
 import { htmlToText } from 'html-to-text'
 import { v4 as generateUuid } from 'uuid'
-
-export interface IChapterImage {
-	uuid: string
-	src: string
-	alt: string
-}
-
-export interface IParsedChapter {
-	text: string
-	images: IChapterImage[]
-}
+import { IPassage, IChapterImage } from '../../@types'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	if (req.method === 'GET') {
@@ -23,41 +13,83 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			const epub = await EPub.createAsync(
 				path.join(process.cwd(), 'public') + '/alices-adventures-in-wonderland.epub',
 			)
-			const chapterKeys: string[] = epub.flow.map(chapter => (chapter.id ? chapter.id : ''))
 
-			const chapters: IParsedChapter[] = []
+			const chaptersPromises =
+				epub.flow.map(async (chapter, chapterIndex) => {
+					try {
+						let chapterContent = ''
+						if (chapter.id) chapterContent = await epub.getChapterRawAsync(chapter.id)
 
-			for (const chapterKey of chapterKeys) {
-				let chapter = await epub.getChapterRawAsync(chapterKey)
+						const chapterImages: IChapterImage[] = []
 
-				const chapterImages: IChapterImage[] = []
-				const matchesImg = chapter.match(/<img([\w\W]+?)\/>/g) || []
+						const matchesImg = chapterContent.match(/<img([\w\W]+?)\/>/g) || []
 
-				matchesImg?.map(imgMatch => {
-					const uuid = generateUuid()
-					const matchesSrc = imgMatch.match(/src="([^"]+)"/) || []
-					const matchesAlt = imgMatch.match(/alt="([^"]+)"/) || []
+						matchesImg?.map(imgMatch => {
+							const uuid = generateUuid()
+							const matchesSrc = imgMatch.match(/src="([^"]+)"/) || []
+							const matchesAlt = imgMatch.match(/alt="([^"]+)"/) || []
 
-					if (matchesSrc[1] && matchesAlt[1]) {
-						chapterImages.push({ uuid, src: '/' + matchesSrc[1], alt: matchesAlt[1] })
+							if (matchesSrc[1] && matchesAlt[1]) {
+								chapterImages.push({
+									chapterIndex,
+									uuid,
+									src: '/' + matchesSrc[1],
+									alt: matchesAlt[1],
+								})
 
-						chapter = chapter.replace(imgMatch, `@${uuid}@`)
+								chapterContent = chapterContent.replace(imgMatch, `@${uuid}@`)
+							}
+						})
+
+						const passages: IPassage[] | null = !chapter.id?.startsWith('chapter')
+							? null
+							: htmlToText(chapterContent, {
+									preserveNewlines: true,
+									selectors: [{ selector: 'img', format: 'skip' }],
+							  })
+									.split('\n\n')
+									?.map((passageContent, passageIndex) => ({
+										index: passageIndex,
+										bookUUID: epub.metadata.UUID || null,
+										chapterIndex,
+										content: passageContent,
+										isHighlighted: false,
+										words:
+											passageContent.split(/\s+/g).map((word, wordIndex) => ({
+												index: wordIndex,
+												bookUUID: epub.metadata.UUID || null,
+												chapterIndex,
+												passageIndex,
+												content: word,
+												isHighlighted: false,
+											})) || null,
+									})) || null
+
+						return {
+							id: chapter.id,
+							index: chapterIndex,
+							title: chapter.title,
+							content: chapter?.id?.includes('title')
+								? chapterContent
+								: htmlToText(chapterContent, {
+										preserveNewlines: true,
+										selectors: [{ selector: 'img', format: 'skip' }],
+								  }),
+							passages,
+							bookUUID: epub.metadata.UUID,
+							href: chapter.href,
+							images: chapterImages,
+						}
+					} catch (error) {
+						console.error(error)
 					}
-				})
+				}) || []
 
-				if (chapterKey.includes('title'))
-					chapters.push({
-						text: chapter,
-						images: chapterImages,
-					})
-				else
-					chapters.push({
-						text: htmlToText(chapter, {
-							preserveNewlines: true,
-							selectors: [{ selector: 'img', format: 'skip' }],
-						}),
-						images: chapterImages,
-					})
+			const chapters = await Promise.all(chaptersPromises)
+
+			const book = {
+				...epub.metadata,
+				chapters,
 			}
 
 			const fileKeys = Object.keys(epub.manifest)
@@ -68,7 +100,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				})
 			}
 
-			res.status(200).json({ chapters })
+			res.status(200).json(book)
 		} catch (error) {
 			console.error(error)
 			res.status(500).json({ error })

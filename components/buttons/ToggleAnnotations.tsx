@@ -1,11 +1,12 @@
-import { useEffect, useContext } from 'react'
+import { useEffect } from 'react'
 import { IconButton, Tooltip } from '@mui/material'
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes'
 
-import { BookViewerContext } from '../../context/BookViewerContext'
+import useBoundStore from '../../store'
 
 const ToggleAnnotations = () => {
-	const { annotationsAreVisible, setAnnotationsAreVisible } = useContext(BookViewerContext)
+	const { annotationsAreVisible, toggleAnnotationsAreVisible, setAnnotationsAreVisible } =
+		useBoundStore()
 
 	useEffect(() => {
 		const storedAnnotationsAreVisible = localStorage.getItem('annotationsAreVisible')
@@ -19,7 +20,7 @@ const ToggleAnnotations = () => {
 				id="display-annotations-button"
 				color={annotationsAreVisible ? 'primary' : 'inherit'}
 				onClick={() => {
-					setAnnotationsAreVisible(annotationsVisible => !annotationsVisible)
+					toggleAnnotationsAreVisible()
 					localStorage.setItem('annotationsAreVisible', JSON.stringify(!annotationsAreVisible))
 				}}
 			>

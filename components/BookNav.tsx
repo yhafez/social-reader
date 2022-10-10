@@ -1,26 +1,107 @@
-import { useContext, Dispatch, SetStateAction } from 'react'
+import { useEffect, useCallback } from 'react'
 import { Box } from '@mui/material'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
-import { ThemeContext } from '../context/ThemeContext'
-import { BookViewerContext } from '../context/BookViewerContext'
-
-export interface IBookNav {
-	side: 'left' | 'right'
-	epubLength: number
-}
+import useBoundStore from '../store'
+import { IBookNav } from '../@types'
 
 const BookNav = ({ side, epubLength }: IBookNav) => {
 	const theme = useTheme()
 	const matches = useMediaQuery(theme.breakpoints.down('sm'))
-	const { isDarkMode } = useContext(ThemeContext)
-	const { chapter, setChapter } = useContext(BookViewerContext)
+	const {
+		setChapter,
+		computed: { chapters, chapterIndex, isDarkMode },
+	} = useBoundStore()
+
+	const handleChapterChange = useCallback(
+		(direction: 'next' | 'prev') => {
+			if (direction === 'next') {
+				if (chapterIndex < epubLength - 1) {
+					setChapter(chapters[chapterIndex + 1])
+				}
+			} else {
+				if (chapterIndex > 0) {
+					setChapter(chapters[chapterIndex - 1])
+				}
+			}
+		},
+		[chapterIndex, epubLength, setChapter, chapters],
+	)
+
+	useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.key === 'ArrowRight') {
+				handleChapterChange('next')
+			} else if (e.key === 'ArrowLeft') {
+				handleChapterChange('prev')
+			}
+		}
+
+		window.addEventListener('keydown', handleKeyDown)
+
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown)
+		}
+	}, [handleChapterChange])
+
+	useEffect(() => {
+		const handleTouchStart = (e: TouchEvent) => {
+			const touch = e.touches[0]
+			const startX = touch.clientX
+			const startY = touch.clientY
+
+			const handleTouchMove = (e: TouchEvent) => {
+				const touch = e.touches[0]
+				const endX = touch.clientX
+				const endY = touch.clientY
+
+				const deltaX = endX - startX
+				const deltaY = endY - startY
+
+				if (Math.abs(deltaX) > Math.abs(deltaY)) {
+					if (deltaX > 0) {
+						handleChapterChange('prev')
+					} else {
+						handleChapterChange('next')
+					}
+				}
+			}
+
+			window.addEventListener('touchmove', handleTouchMove)
+
+			return () => {
+				window.removeEventListener('touchmove', handleTouchMove)
+			}
+		}
+
+		window.addEventListener('touchstart', handleTouchStart)
+
+		return () => {
+			window.removeEventListener('touchstart', handleTouchStart)
+		}
+	}, [handleChapterChange])
+
+	useEffect(() => {
+		const handleSwipe = (e: any) => {
+			if (e.detail.direction === 'left') {
+				handleChapterChange('next')
+			} else if (e.detail.direction === 'right') {
+				handleChapterChange('prev')
+			}
+		}
+
+		window.addEventListener('swiped', handleSwipe)
+
+		return () => {
+			window.removeEventListener('swiped', handleSwipe)
+		}
+	}, [handleChapterChange])
 
 	const boxStyles =
-		(side === 'left' && chapter !== 0) || (side === 'right' && chapter !== epubLength - 1)
+		(side === 'left' && chapterIndex !== 0) || (side === 'right' && chapterIndex !== epubLength - 1)
 			? {
 					cursor: 'pointer',
 					width: matches ? '100%' : 'auto',
@@ -42,33 +123,9 @@ const BookNav = ({ side, epubLength }: IBookNav) => {
 			ml={side === 'right' && !matches ? 2 : 0}
 			px={matches ? 0 : 1}
 			sx={boxStyles}
-			onClick={() =>
-				setChapter(chapter => {
-					if (side === 'left') {
-						if (chapter !== 0) {
-							localStorage.setItem('currentChapter', JSON.stringify(chapter - 1))
-							return chapter - 1
-						} else {
-							localStorage.setItem('currentChapter', JSON.stringify(0))
-							return 0
-						}
-					} else {
-						if (chapter !== epubLength - 1) {
-							localStorage.setItem('currentChapter', JSON.stringify(chapter + 1))
-							return chapter + 1
-						} else {
-							localStorage.setItem('currentChapter', JSON.stringify(epubLength - 1))
-							return epubLength - 1
-						}
-					}
-				})
-			}
+			onClick={() => handleChapterChange(side === 'left' ? 'prev' : 'next')}
 		>
-			{side === 'left' ? (
-				<ArrowBackIosNewIcon sx={{ color: 'gray' }} />
-			) : (
-				<ArrowForwardIosIcon sx={{ color: 'gray' }} />
-			)}
+			{side === 'left' ? <ArrowBackIosNewIcon /> : <ArrowForwardIosIcon />}
 		</Box>
 	)
 }

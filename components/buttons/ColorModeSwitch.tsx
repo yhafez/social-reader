@@ -1,12 +1,15 @@
-import { useEffect, useContext } from 'react'
+import { useEffect } from 'react'
 import { Switch, Tooltip } from '@mui/material'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
 import NightlightIcon from '@mui/icons-material/Nightlight'
 
-import { ThemeContext } from '../../context/ThemeContext'
+import useBoundStore from '../../store'
 
 const ColorModeSwitch = () => {
-	const { setColorMode, isDarkMode } = useContext(ThemeContext)
+	const {
+		setColorMode,
+		computed: { isDarkMode },
+	} = useBoundStore()
 
 	useEffect(() => {
 		if (localStorage.getItem('colorMode') === 'dark') {

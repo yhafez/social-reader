@@ -1,11 +1,11 @@
-import { useEffect, useContext } from 'react'
+import { useEffect } from 'react'
 import { IconButton, Tooltip } from '@mui/material'
 import ImageIcon from '@mui/icons-material/Image'
 
-import { BookViewerContext } from '../../context/BookViewerContext'
+import useBoundStore from '../../store'
 
 const ToggleImages = () => {
-	const { imagesAreVisible, setImagesAreVisible } = useContext(BookViewerContext)
+	const { imagesAreVisible, setImagesAreVisible, toggleImagesAreVisible } = useBoundStore()
 
 	useEffect(() => {
 		const storedImagesAreVisible = localStorage.getItem('imagesAreVisible')
@@ -17,7 +17,7 @@ const ToggleImages = () => {
 			<IconButton
 				id="toggle-image-button"
 				onClick={() => {
-					setImagesAreVisible(visible => !visible)
+					toggleImagesAreVisible()
 					localStorage.setItem('imagesAreVisible', JSON.stringify(!imagesAreVisible))
 				}}
 				color={imagesAreVisible ? 'primary' : 'inherit'}

@@ -1,12 +1,10 @@
-import { useContext } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Box, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
-import { ThemeContext } from '../context/ThemeContext'
-import { BookViewerContext } from '../context/BookViewerContext'
+import useBoundStore from '../store'
 import ToggleNavbar from './buttons/ToggleNavbar'
 
 const navLinks = [
@@ -35,8 +33,11 @@ const navLinks = [
 const Navbar = () => {
 	const theme = useTheme()
 	const matches = useMediaQuery(theme.breakpoints.up('md'))
-	const { isDarkMode, themeColor } = useContext(ThemeContext)
-	const { navIsExpanded, setNavIsExpanded } = useContext(BookViewerContext)
+	const {
+		navIsExpanded,
+		themeColor,
+		computed: { isDarkMode },
+	} = useBoundStore()
 
 	return (
 		<Box

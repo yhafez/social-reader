@@ -1,13 +1,14 @@
-import { useEffect, useContext } from 'react'
+import { useEffect } from 'react'
 import { IconButton, Tooltip, useMediaQuery, useTheme } from '@mui/material'
-import { BookViewerContext } from '../../context/BookViewerContext'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
+
+import useBoundStore from '../../store'
 
 const ToggleNavbar = () => {
 	const theme = useTheme()
 	const matches = useMediaQuery(theme.breakpoints.up('md'))
-	const { navIsExpanded, setNavIsExpanded } = useContext(BookViewerContext)
+	const { navIsExpanded, setNavIsExpanded, toggleNavIsExpanded } = useBoundStore()
 
 	useEffect(() => {
 		return () => {
@@ -26,7 +27,7 @@ const ToggleNavbar = () => {
 				id="expand-button"
 				color="inherit"
 				onClick={() => {
-					setNavIsExpanded(navExpanded => !navExpanded)
+					toggleNavIsExpanded()
 					localStorage.setItem('navIsExpanded', JSON.stringify(!navIsExpanded))
 				}}
 			>

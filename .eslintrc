@@ -1,7 +1,6 @@
 {
 	"env": {
 		"browser": true,
-		"es2021": true,
 		"jest": true,
 		"node": true
 	},
@@ -22,6 +21,7 @@
 		"react/react-in-jsx-scope": "off",
 		"@typescript-eslint/no-var-requires": "off",
 		"@typescript-eslint/ban-ts-comment": "off",
+		"@typescript-eslint/no-explicit-any": "off",
 		"no-mixed-spaces-and-tabs": "off"
 	},
 	"settings": {

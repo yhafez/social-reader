@@ -1,25 +1,23 @@
-import { useEffect, useContext } from 'react'
+import { useEffect } from 'react'
 import { Box } from '@mui/material'
+import axios from 'axios'
 
+import UseBoundStore from '../store'
 import BookViewer from '../components/BookViewer'
 import Navbar from '../components/Navbar'
 import BookActionBar from '../components/BookActionBar'
-import axios from 'axios'
-import { ThemeContext } from '../context/ThemeContext'
-import { IParsedChapter } from './api/epub'
-import { BookViewerContext } from '../context/BookViewerContext'
 
-export interface IChapters {
-	chapters: IParsedChapter[]
-}
+import { IBook } from '../@types'
 
-const Home = ({ chapters }: IChapters) => {
-	const { isDarkMode, setColorMode } = useContext(ThemeContext)
-	const { setChapters } = useContext(BookViewerContext)
+const Home = ({ book }: { book: IBook }) => {
+	const {
+		setBook,
+		computed: { isDarkMode },
+	} = UseBoundStore()
 
 	useEffect(() => {
-		if (chapters) setChapters(chapters)
-	}, [setChapters, chapters])
+		if (book) setBook(book)
+	}, [book, setBook])
 
 	return (
 		<Box
@@ -48,7 +46,7 @@ export const getServerSideProps = async () => {
 
 		return {
 			props: {
-				chapters: res.data.chapters,
+				book: res.data,
 			},
 		}
 	} catch (e) {

@@ -1,14 +1,12 @@
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState } from 'react'
 import { SketchPicker } from 'react-color'
 import { Box, ClickAwayListener, IconButton, Tooltip } from '@mui/material'
 import ColorLensIcon from '@mui/icons-material/ColorLens'
 
-import { ThemeContext } from '../../context/ThemeContext'
-import { BookViewerContext } from '../../context/BookViewerContext'
+import useBoundStore from '../../store'
 
 const ThemeColorPicker = () => {
-	const { ttsIsOpen, setTtsIsOpen } = useContext(BookViewerContext)
-	const { themeColor, setThemeColor } = useContext(ThemeContext)
+	const { ttsIsOpen, setTtsIsOpen, themeColor, setThemeColor } = useBoundStore()
 	const [isOpen, setIsOpen] = useState(false)
 
 	useEffect(() => {

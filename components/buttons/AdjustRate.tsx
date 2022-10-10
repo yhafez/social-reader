@@ -1,13 +1,15 @@
-import { useState, useEffect, useContext, useRef, Dispatch, SetStateAction } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import SpeedIcon from '@mui/icons-material/Speed'
 import { Box, ClickAwayListener, IconButton, Slider, Tooltip } from '@mui/material'
 
-import { ThemeContext } from '../../context/ThemeContext'
-import { BookViewerContext } from '../../context/BookViewerContext'
+import useBoundStore from '../../store'
 
 const AdjustRate = () => {
-	const { rate, setRate } = useContext(BookViewerContext)
-	const { isDarkMode } = useContext(ThemeContext)
+	const {
+		rate,
+		setRate,
+		computed: { isDarkMode },
+	} = useBoundStore()
 	const [isOpen, setIsOpen] = useState(false)
 	const buttonRef = useRef<HTMLButtonElement>(null)
 

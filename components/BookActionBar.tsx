@@ -1,5 +1,6 @@
-import { useContext } from 'react'
 import { Box } from '@mui/material'
+
+import useBoundStore from '../store'
 
 import ChangeFont from './buttons/ChangeFont'
 import ToggleAnnotations from './buttons/ToggleAnnotations'
@@ -7,13 +8,11 @@ import Highlight from './buttons/Highlight'
 import ColorModeSwitch from './buttons/ColorModeSwitch'
 import ThemeColorPicker from './buttons/ThemeColorPicker'
 import ToggleImages from './buttons/ToggleImages'
-
-import { ThemeContext } from '../context/ThemeContext'
 import ToggleTextToSpeech from './buttons/ToggleTextToSpeech'
 import ResetSettings from './buttons/ResetSettings'
 
 const BookActionBar = () => {
-	const { themeColor } = useContext(ThemeContext)
+	const { themeColor } = useBoundStore()
 
 	return (
 		<>

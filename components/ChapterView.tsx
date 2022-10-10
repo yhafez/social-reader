@@ -1,22 +1,17 @@
-import React, { useContext } from 'react'
 import { Box } from '@mui/material'
 
+import useBoundStore from '../store'
 import Passage from './Passage'
-import { BookViewerContext } from '../context/BookViewerContext'
-export interface IBookSelection extends Range {
-	id: string
-}
 
 const ChapterView = () => {
-	const { chapters, chapter } = useContext(BookViewerContext)
-	const chapterText = chapters[chapter]?.text
+	const {
+		computed: { chapterContent, chapterIndex, passages },
+	} = useBoundStore()
 
-	const passages = chapterText?.split('\n\n')
-
-	if (chapterText?.startsWith('<?xml'))
+	if (!passages?.length)
 		return (
 			<Box
-				id={`chapter-${chapter}-container`}
+				id={`chapter-${chapterIndex}-container`}
 				height="100%"
 				width="100%"
 				position="relative"
@@ -31,9 +26,9 @@ const ChapterView = () => {
 					scrollbarWidth: 'none',
 				}}
 				dangerouslySetInnerHTML={{
-					__html: chapterText.slice(
-						chapterText.indexOf('<body'),
-						chapterText.indexOf('</body>') + 7,
+					__html: chapterContent?.slice(
+						chapterContent?.indexOf('<body'),
+						chapterContent?.indexOf('</body>') + 7,
 					),
 				}}
 			/>
@@ -41,7 +36,7 @@ const ChapterView = () => {
 
 	return (
 		<Box
-			id={`chapter-${chapter}-container`}
+			id={`chapter-${chapterIndex}-container`}
 			height="100%"
 			width="100%"
 			position="relative"
@@ -54,15 +49,10 @@ const ChapterView = () => {
 				scrollbarWidth: 'none',
 			}}
 		>
-			{passages?.map((passage, passageIndex) => (
-				<Passage
-					key={`passage-${passageIndex}-container`}
-					chapterImages={chapters[chapter]?.images}
-					passage={passage}
-					passageIndex={passageIndex}
-					chapterIndex={chapter}
-				/>
-			))}
+			{passages &&
+				passages.map(passage => (
+					<Passage key={`passage-${passage.index}-container`} passage={passage} />
+				))}
 		</Box>
 	)
 }

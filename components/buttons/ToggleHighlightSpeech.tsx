@@ -1,25 +1,25 @@
-import { useEffect, useContext } from 'react'
+import { useEffect } from 'react'
 import { IconButton, Tooltip } from '@mui/material'
 import HighlightIcon from '@mui/icons-material/Highlight'
 
-import { BookViewerContext } from '../../context/BookViewerContext'
+import useBoundStore from '../../store'
 
 const ToggleHighlightSpeech = () => {
-	const { highlightSpeech, setHighlightSpeech } = useContext(BookViewerContext)
+	const { highlightTtsSpeech, setHighlightTtsSpeech, toggleHighlightTtsSpeech } = useBoundStore()
 
 	useEffect(() => {
 		const storedHighlightSpeech = localStorage.getItem('highlightSpeech')
-		if (storedHighlightSpeech) setHighlightSpeech(JSON.parse(storedHighlightSpeech))
-	}, [setHighlightSpeech])
+		if (storedHighlightSpeech) setHighlightTtsSpeech(JSON.parse(storedHighlightSpeech))
+	}, [setHighlightTtsSpeech])
 
 	return (
 		<Tooltip id="highlight-speech-toggle-tooltip" title="Toggle speech highlighting">
 			<IconButton
 				id="highlight-speech--toggle-button"
-				color={highlightSpeech ? 'primary' : 'inherit'}
+				color={highlightTtsSpeech ? 'primary' : 'inherit'}
 				onClick={() => {
-					setHighlightSpeech(isOn => !isOn)
-					localStorage.setItem('highlightSpeech', JSON.stringify(!highlightSpeech))
+					toggleHighlightTtsSpeech()
+					localStorage.setItem('highlightSpeech', JSON.stringify(!highlightTtsSpeech))
 				}}
 			>
 				<HighlightIcon id="highlight-speech-icon" sx={{ cursor: 'pointer' }} />

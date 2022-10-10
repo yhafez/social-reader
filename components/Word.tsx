@@ -1,39 +1,17 @@
-import { useState, useEffect, useContext, MouseEvent, Dispatch, SetStateAction } from 'react'
+import { useState, useEffect, MouseEvent } from 'react'
 import { Box, ClickAwayListener, IconButton, Popover } from '@mui/material'
 import CommentIcon from '@mui/icons-material/Comment'
-import CampaignIcon from '@mui/icons-material/Campaign'
 
-import { BookViewerContext } from '../context/BookViewerContext'
-import { handleHighlight, handleRemoveHighlight, readUtterance } from '../utils/helpers'
+import useBoundStore from '../store'
+import { handleHighlight, handleRemoveHighlight } from '../utils/helpers'
 import Highlight from './buttons/Highlight'
-import { IBookSelection } from './ChapterView'
 import ToggleTextToSpeech from './buttons/ToggleTextToSpeech'
+import { IBookSelection, IWord } from '../@types'
 
-const Word = ({
-	chapterIndex,
-	passageIndex,
-	wordIndex,
-	word,
-}: {
-	chapterIndex: number
-	passageIndex: number
-	wordIndex: number
-	word: string
-}) => {
-	const {
-		fontSize,
-		highlightColor,
-		highlightHoverColor,
-		annotationsAreVisible,
-		speech,
-		setIsPlaying,
-		passages,
-		volume,
-		rate,
-		pitch,
-		voice,
-		setPassageBeingRead,
-	} = useContext(BookViewerContext)
+const Word = ({ word }: { word: IWord }) => {
+	const { fontSize, highlightColor, highlightHoverColor, annotationsAreVisible } = useBoundStore()
+	const { chapterIndex, passageIndex, index: wordIndex, content } = word
+
 	const [anchorEl, setAnchorEl] = useState<HTMLSpanElement | null>(null)
 	const [ranges, setRanges] = useState<IBookSelection[]>([])
 	const [selectedRange, setSelectedRange] = useState<IBookSelection | null>(null)
@@ -131,11 +109,11 @@ const Word = ({
 				onMouseEnter={e => handleHover(e, true)}
 				onMouseLeave={e => handleHover(e, false)}
 				style={{
-					fontSize: `${fontSize}rem`,
+					fontSize: `${fontSize}px`,
 				}}
 				onMouseUp={handleSelection}
 			>
-				{word}
+				{content}
 			</span>
 			<span id={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}-space`}> </span>
 			{popOverIsOpen && (

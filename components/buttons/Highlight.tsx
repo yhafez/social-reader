@@ -1,11 +1,11 @@
-import { useEffect, useContext, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Box, ClickAwayListener, IconButton, Tooltip } from '@mui/material'
 import BorderColorIcon from '@mui/icons-material/BorderColor'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
-
-import { BookViewerContext } from '../../context/BookViewerContext'
 import { SliderPicker, AlphaPicker } from 'react-color'
+
+import useBoundStore from '../../store'
 
 const Highlight = ({
 	buttonType,
@@ -22,7 +22,7 @@ const Highlight = ({
 	const matches = useMediaQuery(theme.breakpoints.up('sm'))
 	const [isOpen, setIsOpen] = useState(false)
 	const { highlightColor, setHighlightColor, setHighlightHoverColor, ttsIsOpen, setTtsIsOpen } =
-		useContext(BookViewerContext)
+		useBoundStore()
 
 	useEffect(() => {
 		const storedHighlightColor = localStorage.getItem('highlightColor')

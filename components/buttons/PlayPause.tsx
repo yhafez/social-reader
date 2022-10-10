@@ -1,45 +1,44 @@
-import { useContext } from 'react'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import PauseIcon from '@mui/icons-material/Pause'
 import { IconButton, Tooltip } from '@mui/material'
 
-import { BookViewerContext } from '../../context/BookViewerContext'
+import useBoundStore from '../../store'
 import { readUtterance } from '../../utils/helpers'
 
 const PlayPause = () => {
 	const {
-		isPlaying,
-		setIsPlaying,
+		ttsIsPlaying,
+		setTtsIsPlaying,
 		speech,
 		volume,
 		rate,
 		pitch,
 		voice,
-		passages,
-		setPassageBeingRead,
-	} = useContext(BookViewerContext)
+		setTtsPassageBeingRead,
+		computed: { passages },
+	} = useBoundStore()
 
 	const handlePlay = () => {
-		if (speech.speaking()) speech.resume()
+		if (speech?.speaking) speech?.resume()
 		readUtterance(
 			volume,
 			rate,
 			pitch,
 			voice,
 			speech,
-			passages,
+			passages && passages.length > 0 ? passages : [],
 			0,
-			setIsPlaying,
-			setPassageBeingRead,
+			setTtsIsPlaying,
+			setTtsPassageBeingRead,
 		)
 	}
 
 	const handlePause = () => {
-		setIsPlaying(false)
-		speech.pause()
+		setTtsIsPlaying(false)
+		speech?.pause()
 	}
 
-	return isPlaying ? (
+	return ttsIsPlaying ? (
 		<Tooltip id="pause-audio-tooltip" title="Pause text-to-speech">
 			<IconButton id="pause-audio-button" color="inherit" onClick={handlePause}>
 				<PauseIcon id="pause-audio-icon" sx={{ cursor: 'pointer' }} />
