@@ -115,7 +115,14 @@ const Word = ({ word }: { word: IWord }) => {
 			>
 				{content}
 			</span>
-			<span id={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}-space`}> </span>
+			<span
+				id={`chapter-${chapterIndex}-passage-${passageIndex}-word-${wordIndex}-space`}
+				style={{
+					fontSize: `${fontSize}px`,
+				}}
+			>
+				{' '}
+			</span>
 			{popOverIsOpen && (
 				<ClickAwayListener onClickAway={() => handleClosePopOver(false)}>
 					<Popover

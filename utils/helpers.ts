@@ -97,7 +97,6 @@ export function handleHighlight(
 
 				element.classList.remove(key)
 				element.classList.remove('selected')
-				element.classList.remove('highlight')
 
 				if (element.classList.length === 0) element.removeAttribute('class')
 				if (element.style.cssText === '') element.removeAttribute('style')
